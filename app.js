@@ -1,8 +1,31 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — Логика калькулятора, анимации и мультилендинга         */
+/* Все Банки — SOTA 2026 Interactive Portal Engine                    */
 /* ------------------------------------------------------------------ */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. Табы фильтрации продуктов
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const cardItems = document.querySelectorAll(".card-item");
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      tabBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const cat = btn.getAttribute("data-cat");
+
+      cardItems.forEach((card) => {
+        const cardCat = card.getAttribute("data-category");
+        if (cat === "all" || cardCat === cat) {
+          card.style.display = "flex";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  });
+
+  // 2. Интерактивный калькулятор
   const amountRange = document.getElementById("amountRange");
   const monthsRange = document.getElementById("monthsRange");
   const amountVal = document.getElementById("amountVal");
@@ -30,7 +53,45 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCalc();
   }
 
-  // Волновой индикатор ставок
+  // 3. Модальное окно условий
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalClose = document.getElementById("modalClose");
+  const modalOkBtn = document.getElementById("modalOkBtn");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalDesc = document.getElementById("modalDesc");
+  const openModalBtns = document.querySelectorAll(".open-modal-btn");
+
+  function closeModal() {
+    if (modalOverlay) {
+      modalOverlay.classList.remove("active");
+      modalOverlay.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  openModalBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const title = btn.getAttribute("data-title") || "Условия продукта";
+      const desc = btn.getAttribute("data-desc") || "Информация о продукте.";
+
+      if (modalTitle) modalTitle.textContent = title;
+      if (modalDesc) modalDesc.textContent = desc;
+
+      if (modalOverlay) {
+        modalOverlay.classList.add("active");
+        modalOverlay.setAttribute("aria-hidden", "false");
+      }
+    });
+  });
+
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+  if (modalOkBtn) modalOkBtn.addEventListener("click", closeModal);
+  if (modalOverlay) {
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+  }
+
+  // 4. SOTA Code-Video Wave Rate Indicator Canvas
   const canvas = document.getElementById("rateCanvas");
   if (canvas) {
     const ctx = canvas.getContext("2d");
@@ -43,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ctx.clearRect(0, 0, w, h);
 
+      // Чертёжная сетка
       ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
       ctx.lineWidth = 1;
       for (let x = 0; x < w; x += 40) {
@@ -52,12 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.stroke();
       }
 
+      // Волна изменения ставок
       ctx.beginPath();
-      ctx.strokeStyle = "#e0a91c";
+      ctx.strokeStyle = "#e0a91c"; // Gold Accent
       ctx.lineWidth = 3;
 
       for (let x = 0; x < w; x += 5) {
-        const y = h / 2 + Math.sin((x + frame * 3) * 0.02) * 25 + Math.cos((x - frame) * 0.01) * 10;
+        const y = h / 2 + Math.sin((x + frame * 3) * 0.02) * 20 + Math.cos((x - frame) * 0.01) * 8;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
@@ -73,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // MultiLanding URL parameters
+  // 5. MultiLanding URL parameter handling
   const params = new URLSearchParams(window.location.search);
   const term = params.get("utm_term");
   if (term) {

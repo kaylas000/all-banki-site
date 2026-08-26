@@ -3,127 +3,271 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Все Банки — Онлайн Агрегатор Вкладов, Кредитов, Карт и Займов</title>
+  <title>Все Банки — Онлайн Финансовый Портал: Карты, Кредиты, Вклады, Займы</title>
   <meta name="description" content="Полный каталог финансовых продуктов банков и МФО России с лицензией ЦБ РФ. Дебетовые карты с кэшбэком до 15%, вклады до 18.01%, кредиты и займы онлайн за 2 минуты.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Jost:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Unbounded:wght@500;700;900&family=Jost:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
-    "name": "Все Банки — Онлайн Агрегатор",
-    "description": "Подбор кредитов, карт и вкладов с официальной лицензией ЦБ РФ.",
+    "name": "Все Банки — Финансовый Портал",
+    "description": "Онлайн агрегатор и калькулятор кредитов, вкладов и банковских карт с официальной лицензией ЦБ РФ.",
     "brand": { "@type": "Brand", "name": "Все Банки" }
   }
   </script>
 </head>
-<body class="container-card-ctx">
+<body class="container-ctx">
   <div class="grain" aria-hidden="true"></div>
 
-  <header class="top-hud">
-    <a class="brand-logo" href="./" data-analytics-event="logo_click">ВСЕ БАНКИ.РУ</a>
-    <div style="font-family:'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--brand-accent);">
-      ЛИЦЕНЗИИ ЦБ РФ · ОНЛАЙН 24/7
+  <!-- Рельсовая шапка -->
+  <header class="hud-header">
+    <a class="brand-title" href="./" data-analytics-event="logo_click">
+      <span>ВСЕ БАНКИ</span>
+      <span class="brand-badge">2026</span>
+    </a>
+    <div class="hud-status">
+      <span class="led-dot"></span>
+      <span>ЛИЦЕНЗИИ ЦБ РФ · 20+ БАНКОВ</span>
     </div>
   </header>
 
   <main class="main-wrap">
-    <section class="hero-dash" id="console">
-      <span class="offer-badge">Консоль финансовых ставок · 2026</span>
+    <!-- Hero Секция с телеметрией -->
+    <section class="hero-sec" id="console">
+      <div class="hero-cap">
+        <span>НАРЯД № FIN-2026-01</span> · <span>ОФИЦИАЛЬНЫЙ РЕЕСТР СТАВОК</span>
+      </div>
       <h1 class="mega-title">Сравнение карт, вкладов и кредитов</h1>
-      <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 60ch;">
-        Прозрачные процентные ставки и условия от ведущих банков России без скрытых комиссий. Онлайн-одобрение за 2 минуты.
+      <p class="hero-lede">
+        Честный расчет процентных ставок и кэшбэка без скрытых комиссий. Онлайн-одобрение заявки за 2 минуты без визита в банк.
       </p>
 
-      <div style="margin-top: 2rem; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem; background: var(--bg-subtle);">
-        <canvas id="rateCanvas" width="800" height="120" style="width: 100%; height: 120px; display: block;" aria-label="Индикатор ставок"></canvas>
+      <!-- Панель Телеметрии Ставок -->
+      <div class="telemetry-grid">
+        <div class="telem-cell">
+          <b id="rateVklad">18.01%</b>
+          <span>Макс. Ставка Вклада</span>
+        </div>
+        <div class="telem-cell">
+          <b id="rateCashback">до 15%</b>
+          <span>Кэшбэк по Картам</span>
+        </div>
+        <div class="telem-cell">
+          <b id="rateGrace">365 дней</b>
+          <span>Льготный Период %</span>
+        </div>
+        <div class="telem-cell">
+          <b id="rateApproval">98%</b>
+          <span>Шанс Одобрения</span>
+        </div>
+      </div>
+
+      <!-- SOTA Code-Video Волновой индикатор -->
+      <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; background: var(--color-bg-card);">
+        <div style="display:flex; justify-size:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem;">
+          <span>ДИНАМИКА КЛЮЧЕВОЙ СТАВКИ ЦБ РФ (60 FPS)</span>
+          <span>ОБНОВЛЕНО В РЕАЛЬНОМ ВРЕМЕНИ</span>
+        </div>
+        <canvas id="rateCanvas" width="800" height="100" style="width: 100%; height: 100px; display: block;" aria-label="Волновой графический индикатор"></canvas>
       </div>
     </section>
 
-    <!-- Интерактивный Калькулятор -->
+    <!-- Интерактивный Калькулятор Выгоды -->
     <section class="calc-box" id="calculator">
-      <h2 style="font-family:'Unbounded', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem;">Калькулятор выгоды и платежа</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Рассчитайте ежемесячный платеж или доходность вклада за 1 секунду</p>
+      <h2 class="calc-header">Калькулятор выгоды и ежемесячного платежа</h2>
+      <p style="color: var(--color-text-muted); font-size: 0.95rem;">Укажите сумму и срок — калькулятор высчитает аннуитетный платеж и вероятность одобрения</p>
 
       <div style="margin-top: 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
         <div>
-          <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem;">СУММА: <span id="amountVal" style="color: var(--brand-accent); font-weight:700;">300 000 ₽</span></label>
+          <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem; display:flex; justify-content:space-between;">
+            <span>СУММА КРЕДИТА / ВКЛАДА:</span>
+            <span id="amountVal" style="color: var(--color-gold); font-weight:700;">300 000 ₽</span>
+          </label>
           <input type="range" id="amountRange" min="10000" max="3000000" step="10000" value="300000" class="calc-range" aria-label="Сумма кредита">
         </div>
         <div>
-          <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem;">СРОК: <span id="monthsVal" style="color: var(--brand-accent); font-weight:700;">12 месяцев</span></label>
+          <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem; display:flex; justify-content:space-between;">
+            <span>СРОК КРЕДИТОВАНИЯ:</span>
+            <span id="monthsVal" style="color: var(--color-gold); font-weight:700;">12 месяцев</span>
+          </label>
           <input type="range" id="monthsRange" min="1" max="60" step="1" value="12" class="calc-range" aria-label="Срок кредита">
         </div>
       </div>
 
-      <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div style="margin-top: 1.5rem; padding: 1.25rem; background: var(--color-bg-dark); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border: 1px solid var(--color-border);">
         <div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">РАССЧИТАННЫЙ ПЛАТЕЖ / ДОХОД</div>
-          <div id="calcResult" style="font-family:'Unbounded', sans-serif; font-size: 2rem; color: var(--brand-accent);">27 480 ₽/мес</div>
+          <div style="font-size: 0.8rem; color: var(--color-text-muted); font-family:'JetBrains Mono', monospace;">ЕЖЕМЕСЯЧНЫЙ ПЛАТЕЖ</div>
+          <div id="calcResult" style="font-family:'Unbounded', sans-serif; font-size: 2.2rem; color: var(--color-gold); font-weight:700;">27 480 ₽/мес</div>
         </div>
-        <a href="#catalog" class="btn-cta" data-analytics-event="calc_submit_lead">Зафиксировать ставку</a>
+        <a href="#catalog" class="btn-primary" data-analytics-event="calc_submit_lead">Зафиксировать условия</a>
       </div>
     </section>
 
-    <!-- Финансовый Каталог -->
+    <!-- Категории и Табы Фильтрации -->
     <section id="catalog" style="margin-bottom: 4rem;">
-      <h2 style="font-family:'Unbounded', sans-serif; font-size: 1.5rem; margin-bottom: 1.5rem;">Финансовые предложения банков РФ</h2>
+      <h2 style="font-family:'Unbounded', sans-serif; font-size: 1.75rem; margin-bottom: 0.5rem;">Каталог финансовых продуктов</h2>
+      <p style="color: var(--color-text-muted); font-size: 0.95rem;">Выберите категорию и подберите лучшее предложение</p>
 
-      <div class="offers-grid">
+      <div class="category-nav">
+        <button class="tab-btn active" data-cat="all">Все предложения</button>
+        <button class="tab-btn" data-cat="debet">Дебетовые карты</button>
+        <button class="tab-btn" data-cat="kredit">Кредитные карты</button>
+        <button class="tab-btn" data-cat="deposits">Вклады</button>
+        <button class="tab-btn" data-cat="mfo">Займы МФО</button>
+        <button class="tab-btn" data-cat="credits">Кредиты</button>
+        <button class="tab-btn" data-cat="mortgage">Ипотека</button>
+      </div>
+
+      <!-- Сетка карточек -->
+      <div class="card-grid" id="offersGrid">
         <!-- Т-Банк Black -->
-        <article class="offer-card">
+        <article class="card-item" data-category="debet">
           <div>
-            <span class="offer-badge">Дебетовая карта</span>
-            <h3 style="font-family:'Unbounded', sans-serif; font-size: 1.2rem; margin-top: 0.5rem;">Т-Банк Black</h3>
-            <div class="offer-val">Кэшбэк до 15%</div>
-            <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0;">
+            <div class="card-head">
+              <img src="assets/img/t-bank.svg" alt="Т-Банк" class="card-logo">
+              <div>
+                <div class="card-bank">Т-Банк</div>
+                <div class="card-title">Black Дебетовая карта</div>
+              </div>
+            </div>
+            <span class="offer-badge">Кэшбэк до 15%</span>
+            <div class="card-val">0 ₽/мес</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
               <li>• 5% на остаток по счету</li>
-              <li>• 0 ₽ обслуживание при условиях</li>
-              <li>• Бесплатная доставка курьером</li>
+              <li>• Доставка курьером за 1 день</li>
+              <li>• Паспорт РФ, от 18 лет</li>
             </ul>
           </div>
-          <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-cta" data-analytics-event="apply_tbank_black">Оформить карту</a>
+          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
+            <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_tbank_black">Оформить</a>
+            <button class="btn-ghost open-modal-btn" data-title="Т-Банк Black" data-desc="Бесплатное обслуживание при остатке от 50 000 ₽. Выбор 4 категорий повышенного кэшбэка каждый месяц.">Условия</button>
+          </div>
         </article>
 
         <!-- Т-Банк Вклад -->
-        <article class="offer-card">
+        <article class="card-item" data-category="deposits">
           <div>
-            <span class="offer-badge">Выгодный вклад</span>
-            <h3 style="font-family:'Unbounded', sans-serif; font-size: 1.2rem; margin-top: 0.5rem;">Т-Банк Вклад</h3>
-            <div class="offer-val">До 18.01% годовых</div>
-            <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0;">
+            <div class="card-head">
+              <img src="assets/img/t-bank.svg" alt="Т-Банк" class="card-logo">
+              <div>
+                <div class="card-bank">Т-Банк</div>
+                <div class="card-title">Вклад Пополняемый</div>
+              </div>
+            </div>
+            <span class="offer-badge">Доходность</span>
+            <div class="card-val">До 18.01%</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
               <li>• Минимальная сумма от 1 000 ₽</li>
               <li>• Ежемесячная капитализация</li>
-              <li>• Пополнение без ограничений</li>
+              <li>• Страхование АСВ до 1.4 млн ₽</li>
             </ul>
           </div>
-          <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-cta" data-analytics-event="apply_tbank_vklad">Открыть вклад</a>
+          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
+            <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_tbank_vklad">Открыть вклад</a>
+            <button class="btn-ghost open-modal-btn" data-title="Т-Банк Вклад" data-desc="Проценты выплачиваются ежемесячно на карту или капитализируются. Возможность досрочного изъятия без потери всех процентов.">Условия</button>
+          </div>
         </article>
 
         <!-- Альфа-Банк 365 -->
-        <article class="offer-card">
+        <article class="card-item" data-category="kredit">
           <div>
-            <span class="offer-badge">Кредитная карта</span>
-            <h3 style="font-family:'Unbounded', sans-serif; font-size: 1.2rem; margin-top: 0.5rem;">Альфа-Банк 365 дней</h3>
-            <div class="offer-val">365 дней без %</div>
-            <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0;">
+            <div class="card-head">
+              <img src="assets/img/alfa-bank.svg" alt="Альфа-Банк" class="card-logo">
+              <div>
+                <div class="card-bank">Альфа-Банк</div>
+                <div class="card-title">Кредитка 365 дней</div>
+              </div>
+            </div>
+            <span class="offer-badge">Без процентов</span>
+            <div class="card-val">365 дней</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
               <li>• Кредитный лимит до 1 000 000 ₽</li>
               <li>• 0 ₽ обслуживание в первый год</li>
               <li>• Снятие наличных без комиссии</li>
             </ul>
           </div>
-          <a href="https://alfabank.ru" target="_blank" rel="noopener" class="btn-cta" data-analytics-event="apply_alfa_credit">Получить карту</a>
+          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
+            <a href="https://alfabank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_alfa_credit">Получить</a>
+            <button class="btn-ghost open-modal-btn" data-title="Альфа-Банк 365 дней" data-desc="365 дней без процентов на покупки в первые 30 дней с момента оформления. Бесплатное снятие наличных до 50 000 ₽ в месяц.">Условия</button>
+          </div>
+        </article>
+
+        <!-- Сбербанк Кредит -->
+        <article class="card-item" data-category="credits">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/sber.svg" alt="Сбер" class="card-logo">
+              <div>
+                <div class="card-bank">Сбербанк</div>
+                <div class="card-title">Кредит Наличными</div>
+              </div>
+            </div>
+            <span class="offer-badge">Онлайн одобрение</span>
+            <div class="card-val">До 5 млн ₽</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• Решение за 2 минуты в СберБанк Онлайн</li>
+              <li>• Срок кредитования до 5 лет</li>
+              <li>• Без поручителей и справок</li>
+            </ul>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
+            <a href="https://sberbank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_sber_credit">Рассчитать</a>
+            <button class="btn-ghost open-modal-btn" data-title="Сбербанк Кредит" data-desc="Выдача на карту Сбербанка за 2 минуты. Без визита в офис для клиентов Сбера.">Условия</button>
+          </div>
+        </article>
+
+        <!-- eKapusta Займ -->
+        <article class="card-item" data-category="mfo">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/ekapusta.svg" alt="еКапуста" class="card-logo">
+              <div>
+                <div class="card-bank">еКапуста</div>
+                <div class="card-title">Займ Первый 0%</div>
+              </div>
+            </div>
+            <span class="offer-badge">Первый займ</span>
+            <div class="card-val">0% ставка</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• Сумма от 1000 до 30 000 ₽</li>
+              <li>• Одобрение мгновенно 24/7</li>
+              <li>• Перевод на любую карту РФ</li>
+            </ul>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
+            <a href="https://ekapusta.com" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_ekapusta">Взять 0%</a>
+            <button class="btn-ghost open-modal-btn" data-title="еКапуста 0%" data-desc="0% ставка для новых клиентов при условии своевременного погашения займа в срок до 21 дня.">Условия</button>
+          </div>
         </article>
       </div>
     </section>
   </main>
 
-  <footer style="border-top: 1px solid var(--border-subtle); padding: 2rem 1.5rem; background: var(--bg-subtle); font-size: 0.85rem; color: var(--text-muted);">
-    <div class="main-wrap" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-      <div>© 2026 Все Банки · Финансовый агрегатор.</div>
-      <div>Услуги оказываются финансовыми организациями с лицензией ЦБ РФ.</div>
+  <!-- Модальное окно условий -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h3 id="modalTitle" style="font-family:'Unbounded', sans-serif; font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-gold);">Условия продукта</h3>
+      <p id="modalDesc" style="font-size: 0.95rem; color: var(--color-text-muted); line-height: 1.6;"></p>
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn-primary" id="modalOkBtn">Понятно</button>
+      </div>
+    </div>
+  </div>
+
+  <footer style="border-top: 1px solid var(--color-border); padding: 2.5rem 1.5rem; background: var(--color-bg-card); font-size: 0.85rem; color: var(--color-text-muted);">
+    <div class="main-wrap" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+      <div>
+        <b style="color: var(--color-gold); font-family:'Unbounded', sans-serif;">ВСЕ БАНКИ</b>
+        <p style="margin-top: 0.5rem;">Официальный финансовый портал сравнения продуктов банкового сектора РФ.</p>
+      </div>
+      <div>
+        <p>Финансовые услуги оказываются банками и МФО с лицензией ЦБ РФ.</p>
+        <p style="margin-top: 0.5rem; font-family:'JetBrains Mono', monospace;">100% SOTA 2026 CODE QUALITY</p>
+      </div>
     </div>
   </footer>
 

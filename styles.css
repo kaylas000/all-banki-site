@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — Финансовый Портал SOTA 2026                            */
+/* Все Банки — SOTA 2026 High-Density Financial Dashboard             */
 /* OKLCH токены, Container Queries (cqw), Cascade Layers @layer       */
 /* ------------------------------------------------------------------ */
 
@@ -7,36 +7,20 @@
 
 @layer design-tokens {
   :root {
-    /* Primitive OKLCH Tokens */
-    --color-brand-50: oklch(0.97 0.01 260);
-    --color-brand-500: oklch(0.20 0.03 260);
-    --color-brand-900: oklch(0.12 0.02 260);
-    --color-accent-gold: oklch(0.75 0.20 85);
-    --color-accent-green: oklch(0.68 0.18 140);
-    --color-accent-red: oklch(0.58 0.22 25);
-    --color-neutral-0: oklch(0.98 0.005 80);
-    --color-neutral-950: oklch(0.10 0.02 80);
-
-    /* Semantic Tokens */
-    --bg-surface: oklch(0.14 0.02 260);
-    --bg-subtle: oklch(0.18 0.03 260);
-    --text-main: oklch(0.98 0.01 260);
-    --text-muted: color-mix(in oklch, var(--text-main) 65%, transparent);
-    --brand-primary: var(--color-brand-500);
-    --brand-accent: var(--color-accent-gold);
-    --border-subtle: color-mix(in oklch, var(--text-main) 20%, transparent);
+    /* OKLCH Perceptual Colors */
+    --color-bg-dark: oklch(0.12 0.02 260);
+    --color-bg-card: oklch(0.16 0.03 260);
+    --color-bg-subtle: oklch(0.20 0.03 260);
+    --color-gold: oklch(0.78 0.22 85);
+    --color-gold-glow: color-mix(in oklch, var(--color-gold) 25%, transparent);
+    --color-green: oklch(0.68 0.18 140);
+    --color-red: oklch(0.58 0.22 25);
+    --color-text-bright: oklch(0.98 0.005 80);
+    --color-text-muted: color-mix(in oklch, var(--color-text-bright) 65%, transparent);
+    --color-border: color-mix(in oklch, var(--color-text-bright) 18%, transparent);
 
     --cb-brake: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg-surface: oklch(0.97 0.01 80);
-      --bg-subtle: oklch(0.92 0.015 80);
-      --text-main: oklch(0.12 0.02 80);
-      --text-muted: color-mix(in oklch, var(--text-main) 65%, transparent);
-      --border-subtle: color-mix(in oklch, var(--text-main) 15%, transparent);
-    }
+    --cb-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 }
 
@@ -48,8 +32,8 @@
   }
 
   html {
-    background: var(--bg-surface);
-    color: var(--text-main);
+    background: var(--color-bg-dark);
+    color: var(--color-text-bright);
     font-family: 'Jost', sans-serif;
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
@@ -62,75 +46,218 @@
 }
 
 @layer layout {
-  .container-card-ctx {
+  .container-ctx {
     container-type: inline-size;
-    container-name: card-container;
+    container-name: page-container;
   }
 
   .main-wrap {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
   }
 }
 
 @layer components {
-  /* Горизонтальная плашка оверлея зерна */
+  /* Текстурное зерно */
   .grain {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 100;
+    z-index: 999;
     opacity: 0.04;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* Шапка приборной консоли */
-  .top-hud {
+  /* Рельсовая шапка */
+  .hud-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-subtle);
-    background: var(--bg-subtle);
+    padding: 0.85rem 1.5rem;
+    background: var(--color-bg-card);
+    border-bottom: 2px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
   }
 
-  .brand-logo {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--brand-accent);
+  .brand-title {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.35rem;
+    color: var(--color-gold);
     text-decoration: none;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .hero-dash {
-    padding: 3rem 1.5rem;
-    border-bottom: 1px solid var(--border-subtle);
+  .brand-badge {
+    background: var(--color-gold);
+    color: var(--color-bg-dark);
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+
+  .hud-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .led-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-green);
+    box-shadow: 0 0 10px var(--color-green);
+  }
+
+  /* Hero Секция */
+  .hero-sec {
+    padding: 3.5rem 0 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-cap {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    letter-spacing: 0.18em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .mega-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(2rem, 8vw, 4.5rem);
-    line-height: 1.1;
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(2.5rem, 9vw, 5.5rem);
+    line-height: 0.95;
     text-transform: uppercase;
-    color: var(--text-main);
-    margin-bottom: 1rem;
+    color: var(--color-text-bright);
+    margin-bottom: 1.25rem;
   }
 
-  /* Карточки банковских продуктов */
-  .offers-grid {
+  .hero-lede {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    max-width: 58ch;
+    margin-bottom: 2rem;
+  }
+
+  /* Панель Телеметрии */
+  .telemetry-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 2rem 0;
   }
 
-  .offer-card {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border-subtle);
+  .telem-cell {
+    background: var(--color-bg-card);
+    padding: 1.25rem;
+
+    & b {
+      display: block;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.6rem;
+      color: var(--color-gold);
+      line-height: 1.1;
+    }
+
+    & span {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+  }
+
+  /* Калькулятор Выгоды */
+  .calc-box {
+    background: var(--color-bg-card);
+    border: 2px solid var(--color-border);
     border-radius: 12px;
+    padding: 2.25rem;
+    margin: 3rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .calc-header {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .calc-range {
+    width: 100%;
+    margin: 1rem 0;
+    accent-color: var(--color-gold);
+    cursor: pointer;
+  }
+
+  /* Категории и Табы */
+  .category-nav {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin: 2rem 0 1.5rem;
+    scrollbar-width: thin;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s var(--cb-brake);
+
+    &:hover, &.active {
+      background: var(--color-gold);
+      color: var(--color-bg-dark);
+      border-color: var(--color-gold);
+      font-weight: 700;
+    }
+  }
+
+  /* Карточки банковских предложений */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card-item {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -139,38 +266,55 @@
 
     &:hover {
       transform: translateY(-4px);
-      border-color: var(--brand-accent);
+      border-color: var(--color-gold);
     }
   }
 
-  .offer-badge {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    background: color-mix(in oklch, var(--brand-accent) 20%, transparent);
-    color: var(--brand-accent);
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #fff;
+    padding: 4px;
+    object-fit: contain;
+  }
+
+  .card-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.1rem;
+    color: var(--color-text-bright);
+  }
+
+  .card-bank {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
-    border-radius: 4px;
+    color: var(--color-gold);
     text-transform: uppercase;
   }
 
-  .offer-val {
+  .card-val {
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.75rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--color-gold);
     margin: 0.5rem 0;
   }
 
-  /* Кнопки действий CTA */
-  .btn-cta {
+  .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 48px;
     padding: 0.75rem 1.5rem;
-    background: var(--brand-accent);
-    color: oklch(0.10 0.02 80);
+    background: var(--color-gold);
+    color: var(--color-bg-dark);
     font-family: 'Unbounded', sans-serif;
     font-size: 0.85rem;
     font-weight: 700;
@@ -181,33 +325,79 @@
     cursor: pointer;
     transition: transform 0.15s var(--cb-brake), background-color 0.15s var(--cb-brake);
 
+    &:hover {
+      background: oklch(0.85 0.24 85);
+    }
+
     &:active {
       transform: scale(0.98);
     }
+  }
 
-    &:focus-visible {
-      outline: 2px solid var(--text-main);
-      outline-offset: 2px;
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--color-text-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: var(--color-border);
     }
   }
 
-  /* Калькулятор выгоды */
-  .calc-box {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 2rem;
-    margin: 3rem 0;
+  /* Модальное окно */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--cb-brake);
+
+    &.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
-  .calc-range {
+  .modal-content {
+    background: var(--color-bg-card);
+    border: 2px solid var(--color-gold);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 600px;
     width: 100%;
-    margin: 1rem 0;
-    accent-color: var(--brand-accent);
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
   }
 }
 
-/* Адаптивность для отключения движения */
+/* Адаптивность кreduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
