@@ -1,12 +1,11 @@
 /* ------------------------------------------------------------------ */
-/* ЦЕХ Code-Video Engine — WebGPU / WebGL2 / Canvas Deterministic    */
+/* Все Банки — SOTA 2026 Interactive Portal Engine & Video Player     */
 /* ------------------------------------------------------------------ */
 
 class BankCodeVideoEngine {
   constructor(canvas) {
     this.canvas = canvas;
-    this.gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
-    this.ctx = !this.gl ? canvas.getContext("2d") : null;
+    this.ctx = canvas.getContext("2d");
     this.frame = 0;
     this.fps = 60;
     this.particles = [];
@@ -22,31 +21,21 @@ class BankCodeVideoEngine {
       vx: (Math.random() - 0.5) * 1.5,
       vy: (Math.random() - 0.5) * 1.5,
       size: 1.5 + Math.random() * 2.5,
-      hue: Math.random() < 0.2 ? 35 : 210 // Gold or Blue
+      hue: Math.random() < 0.2 ? 35 : 210
     }));
   }
 
   renderFrame() {
-    if (this.ctx) {
-      this.renderCanvas2D();
-    } else if (this.gl) {
-      this.renderCanvas2D(); // Fallback 2D for high compatibility
-    }
-    this.frame++;
-  }
-
-  renderCanvas2D() {
-    const ctx = this.ctx || this.canvas.getContext("2d");
+    const ctx = this.ctx;
     if (!ctx) return;
 
     const w = this.canvas.width;
     const h = this.canvas.height;
 
-    // Motion Blur Trail Effect
     ctx.fillStyle = "rgba(15, 14, 10, 0.22)";
     ctx.fillRect(0, 0, w, h);
 
-    // 1. Grid
+    // Grid
     ctx.strokeStyle = "rgba(224, 169, 28, 0.08)";
     ctx.lineWidth = 1;
     for (let x = 0; x < w; x += 40) {
@@ -56,9 +45,9 @@ class BankCodeVideoEngine {
       ctx.stroke();
     }
 
-    // 2. Interactive Kinetic Wave
+    // Kinetic Wave
     ctx.beginPath();
-    ctx.strokeStyle = "#e0a91c"; // CEH Gold
+    ctx.strokeStyle = "#e0a91c";
     ctx.lineWidth = 3;
 
     for (let x = 0; x < w; x += 4) {
@@ -70,7 +59,7 @@ class BankCodeVideoEngine {
     }
     ctx.stroke();
 
-    // 3. Particles
+    // Particles
     this.particles.forEach((p) => {
       p.x += p.vx;
       p.y += p.vy;
@@ -83,16 +72,47 @@ class BankCodeVideoEngine {
       ctx.fill();
     });
 
-    // 4. Telemetry Text Overlay
+    // Telemetry Text
     ctx.font = "700 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
     ctx.fillText(`CODE-VIDEO FRAME #${String(this.frame).padStart(4, "0")} · 60 FPS`, 16, 24);
     ctx.fillText(`TIME VIRTUALIZATION ENGINE (SK-16)`, 16, 40);
+
+    this.frame++;
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Табы фильтрации
+  // 1. Управление HTML5 Видеоплеером
+  const heroVideo = document.getElementById("heroVideo");
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  const muteBtn = document.getElementById("muteBtn");
+
+  if (heroVideo && playPauseBtn) {
+    playPauseBtn.addEventListener("click", () => {
+      if (heroVideo.paused) {
+        heroVideo.play();
+        playPauseBtn.textContent = "⏸ Пауза";
+      } else {
+        heroVideo.pause();
+        playPauseBtn.textContent = "▶ Воспроизвести";
+      }
+    });
+  }
+
+  if (heroVideo && muteBtn) {
+    muteBtn.addEventListener("click", () => {
+      if (heroVideo.muted) {
+        heroVideo.muted = false;
+        muteBtn.textContent = "🔇 Выключить Звук";
+      } else {
+        heroVideo.muted = true;
+        muteBtn.textContent = "🔊 Включить Звук";
+      }
+    });
+  }
+
+  // 2. Табы фильтрации
   const tabBtns = document.querySelectorAll(".tab-btn");
   const cardItems = document.querySelectorAll(".card-item");
 
@@ -114,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 2. Интерактивный калькулятор
+  // 3. Интерактивный калькулятор
   const amountRange = document.getElementById("amountRange");
   const monthsRange = document.getElementById("monthsRange");
   const amountVal = document.getElementById("amountVal");
@@ -142,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCalc();
   }
 
-  // 3. Модальное окно
+  // 4. Модальное окно
   const modalOverlay = document.getElementById("modalOverlay");
   const modalClose = document.getElementById("modalClose");
   const modalOkBtn = document.getElementById("modalOkBtn");
@@ -180,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 4. Запуск полноценного SOTA Code-Video Engine
+  // 5. Запуск Code-Video Canvas Engine
   const canvas = document.getElementById("rateCanvas");
   if (canvas) {
     const videoEngine = new BankCodeVideoEngine(canvas);
@@ -196,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loop();
   }
 
-  // 5. MultiLanding
+  // 6. MultiLanding
   const params = new URLSearchParams(window.location.search);
   const term = params.get("utm_term");
   if (term) {

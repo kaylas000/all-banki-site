@@ -35,7 +35,7 @@
   </header>
 
   <main class="main-wrap">
-    <!-- Hero Секция с телеметрией и кодовым видео -->
+    <!-- Hero Секция с видео и телеметрией -->
     <section class="hero-sec" id="console">
       <div class="hero-cap">
         <span>НАРЯД № FIN-2026-01</span> · <span>ОФИЦИАЛЬНЫЙ РЕЕСТР СТАВОК</span>
@@ -44,6 +44,32 @@
       <p class="hero-lede">
         Честный расчет процентных ставок и кэшбэка без скрытых комиссий. Онлайн-одобрение заявки за 2 минуты без визита в банк.
       </p>
+
+      <!-- Настоящий HTML5 Видеоплеер с управлением -->
+      <div class="video-player-box">
+        <div class="video-player-header">
+          <span>● LIVE VIDEO STREAM · ВСЕ БАНКИ HD</span>
+          <span>60 FPS</span>
+        </div>
+        <video 
+          id="heroVideo"
+          class="hero-video-src" 
+          src="hero-video.mp4" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          controls>
+          Ваш браузер не поддерживает видео.
+        </video>
+        <div class="video-controls-bar">
+          <button id="playPauseBtn" class="btn-video-control">⏸ Пауза</button>
+          <button id="muteBtn" class="btn-video-control">🔊 Включить Звук</button>
+          <span style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-text-muted);">
+            Видео-презентация финансовых ставок и калькуляторов 2026
+          </span>
+        </div>
+      </div>
 
       <!-- Панель Телеметрии Ставок -->
       <div class="telemetry-grid">
@@ -67,7 +93,7 @@
 
       <!-- SOTA Code-Video Движок (SK-16 / К-19): детерминированная кинематика ставок -->
       <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; background: var(--color-bg-card);">
-        <div style="display:flex; justify-space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
+        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
           <span>КОДОВОЕ ВИДЕО: ДИНАМИКА СТАВОК ЦБ РФ (SK-16 · 60 FPS)</span>
           <span>TIME VIRTUALIZATION ENGINE</span>
         </div>
