@@ -168,8 +168,8 @@
     margin-bottom: 2rem;
   }
 
-  /* Настоящий HTML5 Видеоплеер */
-  .video-player-box {
+  /* Кинематографический блок скролл-сторителлинга (SK-03 / CineLine) */
+  .cineline-box {
     background: var(--color-bg-card);
     border: 2px solid var(--color-gold);
     border-radius: 12px;
@@ -178,7 +178,7 @@
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
   }
 
-  .video-player-header {
+  .cineline-hud {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -186,44 +186,55 @@
     background: var(--color-bg-subtle);
     border-bottom: 1px solid var(--color-border);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-gold);
   }
 
-  .hero-video-src {
+  .cineline-canvas-wrap {
+    position: relative;
     width: 100%;
-    max-height: 480px;
-    object-fit: cover;
-    display: block;
-    background: #000;
+    min-height: 320px;
+    background: oklch(0.08 0.02 260);
   }
 
-  .video-controls-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.85rem 1.25rem;
-    background: var(--color-bg-dark);
-    border-top: 1px solid var(--color-border);
-    flex-wrap: wrap;
-  }
-
-  .btn-video-control {
-    background: var(--color-bg-subtle);
+  .cineline-overlay-info {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    right: 1.25rem;
+    background: rgba(15, 14, 10, 0.88);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--color-border);
-    color: var(--color-text-bright);
-    padding: 0.4rem 0.85rem;
-    border-radius: 4px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    cursor: pointer;
-    min-height: 38px;
-    transition: background-color 0.2s ease;
+    border-left: 3px solid var(--color-gold);
+    padding: 1.25rem;
+    border-radius: 8px;
+    pointer-events: none;
+  }
 
-    &:hover {
-      background: var(--color-gold);
-      color: oklch(0.10 0.02 80);
-    }
+  .cineline-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .cineline-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    color: var(--color-text-bright);
+    margin: 0.25rem 0;
+  }
+
+  .cineline-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  .cineline-controls {
+    padding: 1rem 1.25rem;
+    background: var(--color-bg-subtle);
+    border-top: 1px solid var(--color-border);
   }
 
   /* Панель Телеметрии */

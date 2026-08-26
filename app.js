@@ -1,115 +1,147 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — SOTA 2026 Interactive Portal Engine & Video Player     */
+/* Все Банки — CineLine Scroll-Driven Code-Video Engine (SK-03 / SK-16) */
 /* ------------------------------------------------------------------ */
 
-class BankCodeVideoEngine {
+class BankCineLineEngine {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
+    this.progress = 0;
     this.frame = 0;
-    this.fps = 60;
-    this.particles = [];
+
+    this.acts = [
+      {
+        tag: "АКТ I · АНАЛИЗ И СЕКВЕНЦИЯ",
+        title: "Сборка базы предложений 20+ банков",
+        desc: "Автоматический фильтр комиссии, проверка лицензий ЦБ РФ и расчет ПСК."
+      },
+      {
+        tag: "АКТ II · КАЛЬКУЛЯЦИЯ ВЫГОДЫ",
+        title: "Аннуитетный расчет ставок и кэшбэка",
+        desc: "Перерасчет процента на остаток и льготного периода за 1 миллисекунду."
+      },
+      {
+        tag: "АКТ III · МГНОВЕННОЕ ОДОБРЕНИЕ",
+        title: "Фиксация условий и подача онлайн-заявки",
+        desc: "Защищенный передаточный канал с решением за 2 минуты без визита в банк."
+      }
+    ];
+
     this.init();
   }
 
   init() {
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-    this.particles = Array.from({ length: 300 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: (Math.random() - 0.5) * 1.5,
-      size: 1.5 + Math.random() * 2.5,
-      hue: Math.random() < 0.2 ? 35 : 210
+    this.particles = Array.from({ length: 400 }, () => ({
+      x: Math.random() * this.canvas.width,
+      y: Math.random() * this.canvas.height,
+      tx: Math.random() * this.canvas.width,
+      ty: Math.random() * this.canvas.height,
+      size: 1.2 + Math.random() * 2.5,
+      color: Math.random() < 0.25 ? "rgba(224, 169, 28, 0.85)" : "rgba(232, 230, 222, 0.4)"
     }));
   }
 
-  renderFrame() {
+  setScrub(p) {
+    this.progress = Math.min(1, Math.max(0, p));
+    this.frame = Math.round(this.progress * 204); // 204 кадров SOTA
+    this.render();
+  }
+
+  render() {
     const ctx = this.ctx;
     if (!ctx) return;
 
     const w = this.canvas.width;
     const h = this.canvas.height;
+    const p = this.progress;
 
-    ctx.fillStyle = "rgba(15, 14, 10, 0.22)";
+    // Trail motion blur
+    ctx.fillStyle = "rgba(15, 14, 10, 0.35)";
     ctx.fillRect(0, 0, w, h);
 
     // Grid
     ctx.strokeStyle = "rgba(224, 169, 28, 0.08)";
     ctx.lineWidth = 1;
-    for (let x = 0; x < w; x += 40) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, h);
-      ctx.stroke();
+    for (let x = 0; x < w; x += 44) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     }
 
-    // Kinetic Wave
+    // Interactive Conveyor Line
+    const lineY = h * 0.7;
+    ctx.strokeStyle = "rgba(232, 230, 222, 0.25)";
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.strokeStyle = "#e0a91c";
-    ctx.lineWidth = 3;
-
-    for (let x = 0; x < w; x += 4) {
-      const y = h / 2 + 
-        Math.sin((x + this.frame * 2.5) * 0.015) * 35 + 
-        Math.cos((x * 0.5 - this.frame) * 0.02) * 15;
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
+    ctx.moveTo(0, lineY);
+    ctx.lineTo(w, lineY);
     ctx.stroke();
 
-    // Particles
-    this.particles.forEach((p) => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
+    // Moving Workpiece Box
+    const boxX = p * (w - 140);
+    ctx.fillStyle = "oklch(0.18 0.03 260)";
+    ctx.strokeStyle = "#e0a91c";
+    ctx.lineWidth = 2;
+    ctx.fillRect(boxX, lineY - 40, 140, 40);
+    ctx.strokeRect(boxX, lineY - 40, 140, 40);
 
-      ctx.fillStyle = p.hue === 35 ? "rgba(224, 169, 28, 0.85)" : "rgba(29, 58, 95, 0.75)";
+    ctx.fillStyle = "#e0a91c";
+    ctx.font = "700 11px 'JetBrains Mono', monospace";
+    ctx.fillText(`CINE-FRAME #${String(this.frame).padStart(3, "0")}`, boxX + 12, lineY - 18);
+
+    // Particles Motion Assembly
+    this.particles.forEach((pt, i) => {
+      const curX = pt.x + (pt.tx - pt.x) * p + Math.sin(p * Math.PI * 6 + i) * 12;
+      const curY = pt.y + (pt.ty - pt.y) * p + Math.cos(p * Math.PI * 6 + i) * 12;
+
+      ctx.fillStyle = pt.color;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.arc(curX, curY, pt.size, 0, Math.PI * 2);
       ctx.fill();
     });
 
     // Telemetry Text
-    ctx.font = "700 11px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
-    ctx.fillText(`CODE-VIDEO FRAME #${String(this.frame).padStart(4, "0")} · 60 FPS`, 16, 24);
-    ctx.fillText(`TIME VIRTUALIZATION ENGINE (SK-16)`, 16, 40);
+    ctx.font = "700 10px 'JetBrains Mono', monospace";
+    ctx.fillStyle = "rgba(232, 230, 222, 0.5)";
+    ctx.fillText(`CINE-LINE SCRUBBING · PROGRESS: ${(p * 100).toFixed(1)}%`, 16, h - 16);
 
-    this.frame++;
+    // Update Overlay Info text based on Scrub Act
+    const actIdx = Math.min(2, Math.floor(p * 3));
+    const currentAct = this.acts[actIdx];
+
+    const tagEl = document.querySelector("#cineInfo .cineline-tag");
+    const titleEl = document.querySelector("#cineInfo .cineline-title");
+    const descEl = document.querySelector("#cineInfo .cineline-desc");
+
+    if (tagEl) tagEl.textContent = currentAct.tag;
+    if (titleEl) titleEl.textContent = currentAct.title;
+    if (descEl) descEl.textContent = currentAct.desc;
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Управление HTML5 Видеоплеером
-  const heroVideo = document.getElementById("heroVideo");
-  const playPauseBtn = document.getElementById("playPauseBtn");
-  const muteBtn = document.getElementById("muteBtn");
+  // 1. CineLine Scrubbing Engine
+  const cineCanvas = document.getElementById("cineCanvas");
+  const cineScrubber = document.getElementById("cineScrubber");
 
-  if (heroVideo && playPauseBtn) {
-    playPauseBtn.addEventListener("click", () => {
-      if (heroVideo.paused) {
-        heroVideo.play();
-        playPauseBtn.textContent = "⏸ Пауза";
-      } else {
-        heroVideo.pause();
-        playPauseBtn.textContent = "▶ Воспроизвести";
-      }
-    });
-  }
+  if (cineCanvas && cineScrubber) {
+    const cineEngine = new BankCineLineEngine(cineCanvas);
+    cineEngine.setScrub(0);
 
-  if (heroVideo && muteBtn) {
-    muteBtn.addEventListener("click", () => {
-      if (heroVideo.muted) {
-        heroVideo.muted = false;
-        muteBtn.textContent = "🔇 Выключить Звук";
-      } else {
-        heroVideo.muted = true;
-        muteBtn.textContent = "🔊 Включить Звук";
-      }
+    cineScrubber.addEventListener("input", (e) => {
+      const val = parseFloat(e.target.value) / 100;
+      cineEngine.setScrub(val);
     });
+
+    // Автопрокрутка скроллом при входе во вьюпорт
+    window.addEventListener("scroll", () => {
+      const rect = cineCanvas.getBoundingClientRect();
+      const winH = window.innerHeight;
+
+      if (rect.top < winH && rect.bottom > 0) {
+        const p = Math.min(1, Math.max(0, (winH - rect.top) / (winH + rect.height)));
+        cineEngine.setScrub(p);
+        cineScrubber.value = Math.round(p * 100);
+      }
+    }, { passive: true });
   }
 
   // 2. Табы фильтрации
@@ -200,23 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 5. Запуск Code-Video Canvas Engine
-  const canvas = document.getElementById("rateCanvas");
-  if (canvas) {
-    const videoEngine = new BankCodeVideoEngine(canvas);
-    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    function loop() {
-      videoEngine.renderFrame();
-      if (!isReduced) {
-        requestAnimationFrame(loop);
-      }
-    }
-
-    loop();
-  }
-
-  // 6. MultiLanding
+  // 5. MultiLanding
   const params = new URLSearchParams(window.location.search);
   const term = params.get("utm_term");
   if (term) {
