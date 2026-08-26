@@ -1,17 +1,24 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — SOTA 2026 Interactive Web Video Intro Engine (SK-16)   */
+/* Все Банки — РАДИКАЛЬНЫЙ 4-АКТНЫЙ КИНО-ДВИЖОК ВЕБ-ВИДЕО (SK-06/16)  */
 /* ------------------------------------------------------------------ */
 
-class BankIntroVideoEngine {
+class RadicalBankVideoIntroEngine {
   constructor(canvas, onDone) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.onDone = onDone;
     this.frame = 0;
-    this.totalFrames = 240; // 4.0 секунды при 60 FPS
+    this.totalFrames = 240; // 4.0 сек при 60 FPS
     this.isPlaying = true;
-    this.soundOn = false;
+    this.soundEnabled = false;
     this.ac = null;
+
+    this.acts = [
+      { id: "I", tag: "АКТ I · СКАНЕР РЫНКА", title: "Мониторинг 20+ банков ЦБ РФ", sub: "Ставка 18.01% · ПСК 0%" },
+      { id: "II", tag: "АКТ II · 3D-КАРТЫ И ВКЛАДЫ", title: "Т-Банк, Альфа, Сбер, еКапуста", sub: "Кэшбэк 15% · 365 дней 0%" },
+      { id: "III", tag: "АКТ III · ФИКСАЦИЯ СТАВКИ", title: "ОДОБРЕНИЕ ЗАЯВКИ 98%", sub: "Без справок и визита в банк" },
+      { id: "IV", tag: "АКТ IV · ШТОРКИ К САЙТУ", title: "ОТКРЫТИЕ ФИНАНСОВОЙ КОНСОЛИ", sub: "Доступ разрешен 24/7" }
+    ];
 
     this.init();
   }
@@ -19,17 +26,18 @@ class BankIntroVideoEngine {
   init() {
     const w = this.canvas.width;
     const h = this.canvas.height;
-    
-    // Частицы
-    this.particles = Array.from({ length: 1500 }, () => ({
-      sx: (Math.random() - 0.5) * w * 2.5 + w / 2,
-      sy: (Math.random() - 0.5) * h * 2.5 + h / 2,
-      tx: w / 2 + (Math.random() - 0.5) * w * 0.7,
-      ty: h / 2 + (Math.random() - 0.5) * h * 0.3,
-      size: 1.2 + Math.random() * 2.8,
-      delay: Math.random() * 0.45,
-      color: Math.random() < 0.35 ? "#e0a91c" : "#e8e6de"
+
+    // 3D Графический массив частиц с Z-координатой
+    this.particles = Array.from({ length: 1800 }, () => ({
+      x: (Math.random() - 0.5) * w * 2.5,
+      y: (Math.random() - 0.5) * h * 2.5,
+      z: Math.random() * 1000 + 1,
+      size: 1.5 + Math.random() * 3.0,
+      color: Math.random() < 0.4 ? "#e0a91c" : Math.random() < 0.7 ? "#1d3a5f" : "#e8e6de"
     }));
+
+    // Код символов скрэмбла
+    this.scrambleChars = "0123456789%₽ВСЕБАНКИ#/_=";
   }
 
   start() {
@@ -40,7 +48,7 @@ class BankIntroVideoEngine {
     if (!this.isPlaying) return;
 
     const p = this.frame / this.totalFrames;
-    this.drawFrame(p);
+    this.renderRadicalFrame(p);
 
     this.frame++;
 
@@ -52,89 +60,153 @@ class BankIntroVideoEngine {
     requestAnimationFrame(this.loop);
   };
 
-  drawFrame(p) {
+  renderRadicalFrame(p) {
     const ctx = this.ctx;
     if (!ctx) return;
 
     const w = this.canvas.width;
     const h = this.canvas.height;
+    const f = this.frame;
 
-    // Глубокий темный фон
-    ctx.fillStyle = "#0f0e0a";
+    // 1. Темный кинематографический фон с анаморфным зерном
+    ctx.fillStyle = "#0c0b08";
     ctx.fillRect(0, 0, w, h);
 
-    // Сетка
-    ctx.strokeStyle = "rgba(224, 169, 28, 0.05)";
+    // 2. Чертёжная координатная сетка
+    ctx.strokeStyle = "rgba(224, 169, 28, 0.06)";
     ctx.lineWidth = 1;
-    for (let x = 0; x < w; x += 56) {
+    for (let x = 0; x < w; x += 44) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     }
-    for (let y = 0; y < h; y += 56) {
+    for (let y = 0; y < h; y += 44) {
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
     }
 
-    if (p < 0.2) {
-      // ФАЗА 1: Сканирование и загрузка реестра
-      const lp = p / 0.2;
-      ctx.font = "700 14px 'JetBrains Mono', monospace";
-      ctx.fillStyle = "#e0a91c";
-      ctx.textAlign = "center";
-      ctx.fillText("ЗАГРУЗКА РЕЕСТРА СТАВОК И ЦБ РФ ЛИЦЕНЗИЙ...", w / 2, h * 0.45);
-
-      ctx.fillStyle = "rgba(232, 230, 222, 0.15)";
-      ctx.fillRect(w / 2 - 150, h * 0.52, 300, 4);
-      ctx.fillStyle = "#e0a91c";
-      ctx.fillRect(w / 2 - 150, h * 0.52, 300 * lp, 4);
-    } else if (p < 0.75) {
-      // ФАЗА 2: Сборка логотипа из частиц с Motion Blur
-      const mp = (p - 0.2) / 0.55;
+    // 3. РЕНДЕР 4 АКТОВ СЦЕНАРИЯ
+    if (f < 60) {
+      // ----------------------------------------------------
+      // АКТ I: ТЕХНИЧЕСКИЙ ХАОС И СКАНЕР (0.0s - 1.0s)
+      // ----------------------------------------------------
+      const p1 = f / 60;
       
-      this.particles.forEach((pt) => {
-        const local = Math.min(1, Math.max(0, (mp - pt.delay) / (1 - pt.delay)));
-        const e = (local >= 1) ? 1 : 1 - Math.pow(2, -10 * local); // easeOutExpo
-        const curX = pt.sx + (pt.tx - pt.sx) * e;
-        const curY = pt.sy + (pt.ty - pt.sy) * e;
+      // Вращающийся сканирующий луч
+      ctx.save();
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(p1 * Math.PI * 2);
+      ctx.strokeStyle = "rgba(224, 169, 28, 0.35)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, 140, 0, Math.PI * 1.5);
+      ctx.stroke();
+      ctx.restore();
 
-        ctx.fillStyle = pt.color;
-        ctx.beginPath();
-        ctx.arc(curX, curY, pt.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
+      // Бегающие строки валют и ставок
+      ctx.font = "700 12px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "rgba(232, 230, 222, 0.6)";
+      ctx.textAlign = "center";
+      ctx.fillText(`ЦБ РФ: 18.01% · Т-БАНК: 15% · АЛЬФА: 365 ДНЕЙ · СБЕР: 5 МЛН ₽`, w / 2, h * 0.35);
+      ctx.fillText(`СКАНЕР ИНДЕКСАЦИИ СТАВОК... ${Math.round(p1 * 100)}%`, w / 2, h * 0.65);
 
-      if (mp > 0.35) {
-        const titleP = (mp - 0.35) / 0.65;
-        ctx.save();
-        ctx.translate(w / 2, h / 2 - 15);
-        ctx.scale(0.8 + titleP * 0.2, 0.8 + titleP * 0.2);
-        
-        ctx.font = "900 72px 'Russo One', sans-serif";
-        ctx.fillStyle = "#e0a91c";
-        ctx.textAlign = "center";
-        ctx.fillText("ВСЕ БАНКИ", 0, 0);
+    } else if (f < 130) {
+      // ----------------------------------------------------
+      // АКТ II: ПОЛЁТ 3D-КАРТ И ЗОЛОТЫХ МОНЕТ (1.0s - 2.1s)
+      // ----------------------------------------------------
+      const p2 = (f - 60) / 70;
+      const cardW = 240;
+      const cardH = 140;
 
-        ctx.font = "700 18px 'JetBrains Mono', monospace";
-        ctx.fillStyle = "#e8e6de";
-        ctx.fillText("ФИНАНСОВЫЙ ПОРТАЛ · ПРЕМЬЕРА 2026", 0, 45);
-        ctx.restore();
-      }
-    } else {
-      // ФАЗА 3: Завершение и подготовка к раздвижению шторок
-      ctx.font = "900 72px 'Russo One', sans-serif";
+      // 3D Карта 1: Т-Банк Black (смещение слева)
+      ctx.save();
+      ctx.translate(w * 0.3 - (1 - p2) * 200, h * 0.45 + Math.sin(p2 * Math.PI * 3) * 12);
+      ctx.rotate(-0.1 + Math.sin(p2 * Math.PI) * 0.05);
+      ctx.fillStyle = "#16150f";
+      ctx.strokeStyle = "#e0a91c";
+      ctx.lineWidth = 3;
+      ctx.fillRect(-cardW / 2, -cardH / 2, cardW, cardH);
+      ctx.strokeRect(-cardW / 2, -cardH / 2, cardW, cardH);
+
+      ctx.fillStyle = "#e0a91c";
+      ctx.font = "900 15px 'Unbounded', sans-serif";
+      ctx.fillText("Т-БАНК BLACK", -cardW / 2 + 16, -cardH / 2 + 32);
+      ctx.font = "700 22px 'Unbounded', sans-serif";
+      ctx.fillText("15% КЭШБЭК", -cardW / 2 + 16, cardH / 2 - 20);
+      ctx.restore();
+
+      // 3D Карта 2: Альфа-Банк 365 (смещение справа)
+      ctx.save();
+      ctx.translate(w * 0.7 + (1 - p2) * 200, h * 0.45 - Math.cos(p2 * Math.PI * 3) * 12);
+      ctx.rotate(0.1 - Math.sin(p2 * Math.PI) * 0.05);
+      ctx.fillStyle = "#16150f";
+      ctx.strokeStyle = "#ce2c18";
+      ctx.lineWidth = 3;
+      ctx.fillRect(-cardW / 2, -cardH / 2, cardW, cardH);
+      ctx.strokeRect(-cardW / 2, -cardH / 2, cardW, cardH);
+
+      ctx.fillStyle = "#ce2c18";
+      ctx.font = "900 15px 'Unbounded', sans-serif";
+      ctx.fillText("АЛЬФА-БАНК 365", -cardW / 2 + 16, -cardH / 2 + 32);
+      ctx.font = "700 22px 'Unbounded', sans-serif";
+      ctx.fillText("365 ДНЕЙ 0%", -cardW / 2 + 16, cardH / 2 - 20);
+      ctx.restore();
+
+    } else if (f < 190) {
+      // ----------------------------------------------------
+      // АКТ III: УДАР ШТАМПА И ГОЛД-ФЛЭШ (2.1s - 3.1s)
+      // ----------------------------------------------------
+      const p3 = (f - 130) / 60;
+      const easeImpact = (p3 >= 1) ? 1 : 1 - Math.pow(2, -10 * p3);
+
+      // Анаморфная золотая вспышка по центру
+      const flareG = ctx.createLinearGradient(0, h / 2, w, h / 2);
+      flareG.addColorStop(0, "rgba(224,169,28,0)");
+      flareG.addColorStop(0.5, `rgba(224,169,28,${0.75 * (1 - p3)})`);
+      flareG.addColorStop(1, "rgba(224,169,28,0)");
+      ctx.fillStyle = flareG;
+      ctx.fillRect(0, h / 2 - 4, w, 8);
+
+      // Грандиозный заголовок
+      ctx.save();
+      ctx.translate(w / 2, h / 2 - 20);
+      ctx.scale(1.8 - 0.8 * easeImpact, 1.8 - 0.8 * easeImpact);
+
+      ctx.font = "900 76px 'Russo One', sans-serif";
       ctx.fillStyle = "#e0a91c";
       ctx.textAlign = "center";
-      ctx.fillText("ВСЕ БАНКИ", w / 2, h / 2 - 15);
+      ctx.fillText("ВСЕ БАНКИ", 0, 0);
+      ctx.restore();
 
-      ctx.font = "700 18px 'JetBrains Mono', monospace";
+      // Штамп одобрения
+      if (p3 > 0.4) {
+        ctx.font = "900 20px 'Unbounded', sans-serif";
+        ctx.fillStyle = "#2e7d4f";
+        ctx.textAlign = "center";
+        ctx.fillText("✓ ОДОБРЕНИЕ ЗАЯВКИ 98% · ОНЛАЙН 2 МИН", w / 2, h / 2 + 55);
+      }
+
+    } else {
+      // ----------------------------------------------------
+      // АКТ IV: РАЗДВИЖЕНИЕ ШТОР И ВЫХОД (3.1s - 4.0s)
+      // ----------------------------------------------------
+      ctx.font = "900 76px 'Russo One', sans-serif";
+      ctx.fillStyle = "#e0a91c";
+      ctx.textAlign = "center";
+      ctx.fillText("ВСЕ БАНКИ", w / 2, h / 2 - 20);
+
+      ctx.font = "700 16px 'JetBrains Mono', monospace";
       ctx.fillStyle = "#e8e6de";
-      ctx.fillText("ОТКРЫТИЕ ДОСТУПА...", w / 2, h / 2 + 45);
+      ctx.fillText("ОТКРЫТИЕ ФИНАНСОВОЙ КОНСОЛИ...", w / 2, h / 2 + 55);
     }
 
-    // Титры кадра (SOTA Telemetry)
+    // 4. ТИТРЫ И ТЕЛЕМЕТРИЯ КАДРА
+    const actIdx = Math.min(3, Math.floor(f / 60));
+    const curAct = this.acts[actIdx];
+
     ctx.font = "700 11px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "rgba(122,118,106,0.9)";
+    ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
     ctx.textAlign = "left";
-    ctx.fillText(`КАДР ${String(Math.min(240, this.frame)).padStart(3, "0")}/240 · 60 FPS`, 24, h - 34);
-    ctx.fillText(`KINEMATIC WEB-VIDEO INTRO ENGINE (SK-06)`, 24, h - 18);
+    ctx.fillText(`КАДР ${String(f).padStart(3, "0")}/240 · 60 FPS · ${curAct.tag}`, 24, h - 36);
+    ctx.fillStyle = "rgba(232, 230, 222, 0.6)";
+    ctx.fillText(`${curAct.title} · ${curAct.sub}`, 24, h - 20);
   }
 
   skip() {
@@ -233,14 +305,14 @@ class BankCodeVideoEngine {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Запуск SK-06 Кинозаставки перед сайтом при КАЖДОЙ загрузке
+  // 1. Запуск Радикального 4-актного Кино-видео интро
   const introCanvas = document.getElementById("introCanvas");
   const introSkipBtn = document.getElementById("introSkipBtn");
   const replayIntroBtn = document.getElementById("replayIntroBtn");
 
   if (introCanvas) {
-    const introEngine = new BankIntroVideoEngine(introCanvas, () => {
-      console.log("[SK-06] Кинозаставка завершена, доступ к сайту открыт.");
+    const introEngine = new RadicalBankVideoIntroEngine(introCanvas, () => {
+      console.log("[SK-06 / Radical Video] Радикальная заставка завершена, сайт открыт.");
     });
 
     introEngine.start();
@@ -259,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (overlay) {
           overlay.style.display = "flex";
           overlay.classList.remove("is-done");
-          const reEngine = new BankIntroVideoEngine(introCanvas, () => {});
+          const reEngine = new RadicalBankVideoIntroEngine(introCanvas, () => {});
           reEngine.start();
         }
       });
