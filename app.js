@@ -1,18 +1,15 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — SOTA 2026 Interactive Portal & SK-06 Intro Engine      */
+/* Все Банки — SOTA 2026 Interactive Web Video Intro Engine (SK-16)   */
 /* ------------------------------------------------------------------ */
 
-// 🎬 КИНОЗАСТАВКА ПЕРЕД САЙТОМ (SK-06 / INTRO ENGINE)
-class BankIntroEngine {
+class BankIntroVideoEngine {
   constructor(canvas, onDone) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.onDone = onDone;
     this.frame = 0;
-    this.totalFrames = 204; // 3.4s при 60 FPS по стандарту SK-06
-    this.fps = 60;
+    this.totalFrames = 240; // 4.0 секунды при 60 FPS
     this.isPlaying = true;
-    this.particles = [];
     this.soundOn = false;
     this.ac = null;
 
@@ -23,27 +20,19 @@ class BankIntroEngine {
     const w = this.canvas.width;
     const h = this.canvas.height;
     
-    // Формируем частицы, слетающиеся из хаоса в слово "ВСЕ БАНКИ"
-    this.particles = Array.from({ length: 1200 }, () => ({
-      sx: (Math.random() - 0.5) * w * 2 + w / 2,
-      sy: (Math.random() - 0.5) * h * 2 + h / 2,
-      tx: w / 2 + (Math.random() - 0.5) * w * 0.6,
-      ty: h / 2 + (Math.random() - 0.5) * h * 0.2,
-      size: 1.2 + Math.random() * 2.5,
-      delay: Math.random() * 0.4,
-      color: Math.random() < 0.3 ? "#e0a91c" : "#e8e6de"
+    // Частицы
+    this.particles = Array.from({ length: 1500 }, () => ({
+      sx: (Math.random() - 0.5) * w * 2.5 + w / 2,
+      sy: (Math.random() - 0.5) * h * 2.5 + h / 2,
+      tx: w / 2 + (Math.random() - 0.5) * w * 0.7,
+      ty: h / 2 + (Math.random() - 0.5) * h * 0.3,
+      size: 1.2 + Math.random() * 2.8,
+      delay: Math.random() * 0.45,
+      color: Math.random() < 0.35 ? "#e0a91c" : "#e8e6de"
     }));
   }
 
   start() {
-    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem("allbanki-intro-seen") === "1";
-
-    if (isReduced || seen) {
-      this.finish();
-      return;
-    }
-
     this.loop();
   }
 
@@ -51,7 +40,7 @@ class BankIntroEngine {
     if (!this.isPlaying) return;
 
     const p = this.frame / this.totalFrames;
-    this.draw(p);
+    this.drawFrame(p);
 
     this.frame++;
 
@@ -63,32 +52,43 @@ class BankIntroEngine {
     requestAnimationFrame(this.loop);
   };
 
-  draw(p) {
+  drawFrame(p) {
     const ctx = this.ctx;
     if (!ctx) return;
 
     const w = this.canvas.width;
     const h = this.canvas.height;
 
+    // Глубокий темный фон
     ctx.fillStyle = "#0f0e0a";
     ctx.fillRect(0, 0, w, h);
 
-    // Сетка кинозаставки
-    ctx.strokeStyle = "rgba(232,230,222,0.045)";
+    // Сетка
+    ctx.strokeStyle = "rgba(224, 169, 28, 0.05)";
     ctx.lineWidth = 1;
     for (let x = 0; x < w; x += 56) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     }
+    for (let y = 0; y < h; y += 56) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
 
-    if (p < 0.15) {
-      // Фаза Загрузки
+    if (p < 0.2) {
+      // ФАЗА 1: Сканирование и загрузка реестра
+      const lp = p / 0.2;
       ctx.font = "700 14px 'JetBrains Mono', monospace";
-      ctx.fillStyle = "rgba(232, 230, 222, 0.6)";
+      ctx.fillStyle = "#e0a91c";
       ctx.textAlign = "center";
-      ctx.fillText("ЗАГРУЗКА РЕЕСТРА СТАВОК БАНКОВ...", w / 2, h * 0.5);
-    } else {
-      // Фаза Сборки из частиц
-      const mp = (p - 0.15) / 0.85;
+      ctx.fillText("ЗАГРУЗКА РЕЕСТРА СТАВОК И ЦБ РФ ЛИЦЕНЗИЙ...", w / 2, h * 0.45);
+
+      ctx.fillStyle = "rgba(232, 230, 222, 0.15)";
+      ctx.fillRect(w / 2 - 150, h * 0.52, 300, 4);
+      ctx.fillStyle = "#e0a91c";
+      ctx.fillRect(w / 2 - 150, h * 0.52, 300 * lp, 4);
+    } else if (p < 0.75) {
+      // ФАЗА 2: Сборка логотипа из частиц с Motion Blur
+      const mp = (p - 0.2) / 0.55;
+      
       this.particles.forEach((pt) => {
         const local = Math.min(1, Math.max(0, (mp - pt.delay) / (1 - pt.delay)));
         const e = (local >= 1) ? 1 : 1 - Math.pow(2, -10 * local); // easeOutExpo
@@ -101,25 +101,40 @@ class BankIntroEngine {
         ctx.fill();
       });
 
-      // Главный заголовок кинозаставки
-      if (mp > 0.4) {
-        ctx.font = "900 64px 'Russo One', sans-serif";
+      if (mp > 0.35) {
+        const titleP = (mp - 0.35) / 0.65;
+        ctx.save();
+        ctx.translate(w / 2, h / 2 - 15);
+        ctx.scale(0.8 + titleP * 0.2, 0.8 + titleP * 0.2);
+        
+        ctx.font = "900 72px 'Russo One', sans-serif";
         ctx.fillStyle = "#e0a91c";
         ctx.textAlign = "center";
-        ctx.fillText("ВСЕ БАНКИ", w / 2, h / 2 - 10);
+        ctx.fillText("ВСЕ БАНКИ", 0, 0);
 
-        ctx.font = "700 16px 'JetBrains Mono', monospace";
+        ctx.font = "700 18px 'JetBrains Mono', monospace";
         ctx.fillStyle = "#e8e6de";
-        ctx.fillText("ФИНАНСОВЫЙ ПОРТАЛ · ПРЕМЬЕРА 2026", w / 2, h / 2 + 35);
+        ctx.fillText("ФИНАНСОВЫЙ ПОРТАЛ · ПРЕМЬЕРА 2026", 0, 45);
+        ctx.restore();
       }
+    } else {
+      // ФАЗА 3: Завершение и подготовка к раздвижению шторок
+      ctx.font = "900 72px 'Russo One', sans-serif";
+      ctx.fillStyle = "#e0a91c";
+      ctx.textAlign = "center";
+      ctx.fillText("ВСЕ БАНКИ", w / 2, h / 2 - 15);
+
+      ctx.font = "700 18px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#e8e6de";
+      ctx.fillText("ОТКРЫТИЕ ДОСТУПА...", w / 2, h / 2 + 45);
     }
 
-    // Титры кадра
+    // Титры кадра (SOTA Telemetry)
     ctx.font = "700 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = "rgba(122,118,106,0.9)";
     ctx.textAlign = "left";
-    ctx.fillText(`КАДР ${String(Math.min(120, Math.round(p * 120))).padStart(3, "0")}/120`, 24, h - 34);
-    ctx.fillText(`КИНОЗАСТАВКА SK-06 (M-11)`, 24, h - 18);
+    ctx.fillText(`КАДР ${String(Math.min(240, this.frame)).padStart(3, "0")}/240 · 60 FPS`, 24, h - 34);
+    ctx.fillText(`KINEMATIC WEB-VIDEO INTRO ENGINE (SK-06)`, 24, h - 18);
   }
 
   skip() {
@@ -128,7 +143,6 @@ class BankIntroEngine {
 
   finish() {
     this.isPlaying = false;
-    sessionStorage.setItem("allbanki-intro-seen", "1");
     const overlay = document.getElementById("introOverlay");
     if (overlay) {
       overlay.classList.add("is-done");
@@ -219,14 +233,14 @@ class BankCodeVideoEngine {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Запуск SK-06 Кинозаставки перед сайтом
+  // 1. Запуск SK-06 Кинозаставки перед сайтом при КАЖДОЙ загрузке
   const introCanvas = document.getElementById("introCanvas");
   const introSkipBtn = document.getElementById("introSkipBtn");
   const replayIntroBtn = document.getElementById("replayIntroBtn");
 
   if (introCanvas) {
-    const introEngine = new BankIntroEngine(introCanvas, () => {
-      console.log("[SK-06] Заставка завершена, сайт открыт.");
+    const introEngine = new BankIntroVideoEngine(introCanvas, () => {
+      console.log("[SK-06] Кинозаставка завершена, доступ к сайту открыт.");
     });
 
     introEngine.start();
@@ -241,12 +255,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (replayIntroBtn) {
       replayIntroBtn.addEventListener("click", () => {
-        sessionStorage.removeItem("allbanki-intro-seen");
         const overlay = document.getElementById("introOverlay");
         if (overlay) {
           overlay.style.display = "flex";
           overlay.classList.remove("is-done");
-          const reEngine = new BankIntroEngine(introCanvas, () => {});
+          const reEngine = new BankIntroVideoEngine(introCanvas, () => {});
           reEngine.start();
         }
       });
