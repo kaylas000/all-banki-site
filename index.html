@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Все Банки — Онлайн Агрегатор Вкладов, Кредитов, Карт и Займов</title>
+  <meta name="description" content="Полный каталог финансовых продуктов банков и МФО России с лицензией ЦБ РФ. Дебетовые карты с кэшбэком до 15%, вклады до 18.01%, кредиты и займы онлайн за 2 минуты.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Jost:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Все Банки — Онлайн Агрегатор",
+    "description": "Подбор кредитов, карт и вкладов с официальной лицензией ЦБ РФ.",
+    "brand": { "@type": "Brand", "name": "Все Банки" }
+  }
+  </script>
+</head>
+<body class="container-card-ctx">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="top-hud">
+    <a class="brand-logo" href="./" data-analytics-event="logo_click">ВСЕ БАНКИ.РУ</a>
+    <div style="font-family:'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--brand-accent);">
+      ЛИЦЕНЗИИ ЦБ РФ · ОНЛАЙН 24/7
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <section class="hero-dash" id="console">
+      <span class="offer-badge">Консоль финансовых ставок · 2026</span>
+      <h1 class="mega-title">Сравнение карт, вкладов и кредитов</h1>
+      <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 60ch;">
+        Прозрачные процентные ставки и условия от ведущих банков России без скрытых комиссий. Онлайн-одобрение за 2 минуты.
+      </p>
+
+      <div style="margin-top: 2rem; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem; background: var(--bg-subtle);">
+        <canvas id="rateCanvas" width="800" height="120" style="width: 100%; height: 120px; display: block;" aria-label="Индикатор ставок"></canvas>
+      </div>
+    </section>
+
+    <!-- Интерактивный Калькулятор -->
+    <section class="calc-box" id="calculator">
+      <h2 style="font-family:'Unbounded', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem;">Калькулятор выгоды и платежа</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Рассчитайте ежемесячный платеж или доходность вклада за 1 секунду</p>
+
+      <div style="margin-top: 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div>
+          <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem;">СУММА: <span id="amountVal" style="color: var(--brand-accent); font-weight:700;">300 000 ₽</span></label>
+          <input type="range" id="amountRange" min="10000" max="3000000" step="10000" value="300000" class="calc-range" aria-label="Сумма кредита">
+        </div>
+        <div>
+          <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem;">СРОК: <span id="monthsVal" style="color: var(--brand-accent); font-weight:700;">12 месяцев</span></label>
+          <input type="range" id="monthsRange" min="1" max="60" step="1" value="12" class="calc-range" aria-label="Срок кредита">
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-surface); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">РАССЧИТАННЫЙ ПЛАТЕЖ / ДОХОД</div>
+          <div id="calcResult" style="font-family:'Unbounded', sans-serif; font-size: 2rem; color: var(--brand-accent);">27 480 ₽/мес</div>
+        </div>
+        <a href="#catalog" class="btn-cta" data-analytics-event="calc_submit_lead">Зафиксировать ставку</a>
+      </div>
+    </section>
+
+    <!-- Финансовый Каталог -->
+    <section id="catalog" style="margin-bottom: 4rem;">
+      <h2 style="font-family:'Unbounded', sans-serif; font-size: 1.5rem; margin-bottom: 1.5rem;">Финансовые предложения банков РФ</h2>
+
+      <div class="offers-grid">
+        <!-- Т-Банк Black -->
+        <article class="offer-card">
+          <div>
+            <span class="offer-badge">Дебетовая карта</span>
+            <h3 style="font-family:'Unbounded', sans-serif; font-size: 1.2rem; margin-top: 0.5rem;">Т-Банк Black</h3>
+            <div class="offer-val">Кэшбэк до 15%</div>
+            <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0;">
+              <li>• 5% на остаток по счету</li>
+              <li>• 0 ₽ обслуживание при условиях</li>
+              <li>• Бесплатная доставка курьером</li>
+            </ul>
+          </div>
+          <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-cta" data-analytics-event="apply_tbank_black">Оформить карту</a>
+        </article>
+
+        <!-- Т-Банк Вклад -->
+        <article class="offer-card">
+          <div>
+            <span class="offer-badge">Выгодный вклад</span>
+            <h3 style="font-family:'Unbounded', sans-serif; font-size: 1.2rem; margin-top: 0.5rem;">Т-Банк Вклад</h3>
+            <div class="offer-val">До 18.01% годовых</div>
+            <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0;">
+              <li>• Минимальная сумма от 1 000 ₽</li>
+              <li>• Ежемесячная капитализация</li>
+              <li>• Пополнение без ограничений</li>
+            </ul>
+          </div>
+          <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-cta" data-analytics-event="apply_tbank_vklad">Открыть вклад</a>
+        </article>
+
+        <!-- Альфа-Банк 365 -->
+        <article class="offer-card">
+          <div>
+            <span class="offer-badge">Кредитная карта</span>
+            <h3 style="font-family:'Unbounded', sans-serif; font-size: 1.2rem; margin-top: 0.5rem;">Альфа-Банк 365 дней</h3>
+            <div class="offer-val">365 дней без %</div>
+            <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0;">
+              <li>• Кредитный лимит до 1 000 000 ₽</li>
+              <li>• 0 ₽ обслуживание в первый год</li>
+              <li>• Снятие наличных без комиссии</li>
+            </ul>
+          </div>
+          <a href="https://alfabank.ru" target="_blank" rel="noopener" class="btn-cta" data-analytics-event="apply_alfa_credit">Получить карту</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border-subtle); padding: 2rem 1.5rem; background: var(--bg-subtle); font-size: 0.85rem; color: var(--text-muted);">
+    <div class="main-wrap" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>© 2026 Все Банки · Финансовый агрегатор.</div>
+      <div>Услуги оказываются финансовыми организациями с лицензией ЦБ РФ.</div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

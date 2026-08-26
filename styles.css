@@ -1,0 +1,218 @@
+/* ------------------------------------------------------------------ */
+/* Все Банки — Финансовый Портал SOTA 2026                            */
+/* OKLCH токены, Container Queries (cqw), Cascade Layers @layer       */
+/* ------------------------------------------------------------------ */
+
+@layer reset, design-tokens, layout, components, utilities;
+
+@layer design-tokens {
+  :root {
+    /* Primitive OKLCH Tokens */
+    --color-brand-50: oklch(0.97 0.01 260);
+    --color-brand-500: oklch(0.20 0.03 260);
+    --color-brand-900: oklch(0.12 0.02 260);
+    --color-accent-gold: oklch(0.75 0.20 85);
+    --color-accent-green: oklch(0.68 0.18 140);
+    --color-accent-red: oklch(0.58 0.22 25);
+    --color-neutral-0: oklch(0.98 0.005 80);
+    --color-neutral-950: oklch(0.10 0.02 80);
+
+    /* Semantic Tokens */
+    --bg-surface: oklch(0.14 0.02 260);
+    --bg-subtle: oklch(0.18 0.03 260);
+    --text-main: oklch(0.98 0.01 260);
+    --text-muted: color-mix(in oklch, var(--text-main) 65%, transparent);
+    --brand-primary: var(--color-brand-500);
+    --brand-accent: var(--color-accent-gold);
+    --border-subtle: color-mix(in oklch, var(--text-main) 20%, transparent);
+
+    --cb-brake: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg-surface: oklch(0.97 0.01 80);
+      --bg-subtle: oklch(0.92 0.015 80);
+      --text-main: oklch(0.12 0.02 80);
+      --text-muted: color-mix(in oklch, var(--text-main) 65%, transparent);
+      --border-subtle: color-mix(in oklch, var(--text-main) 15%, transparent);
+    }
+  }
+}
+
+@layer reset {
+  *, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    background: var(--bg-surface);
+    color: var(--text-main);
+    font-family: 'Jost', sans-serif;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+@layer layout {
+  .container-card-ctx {
+    container-type: inline-size;
+    container-name: card-container;
+  }
+
+  .main-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+}
+
+@layer components {
+  /* Горизонтальная плашка оверлея зерна */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Шапка приборной консоли */
+  .top-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-subtle);
+  }
+
+  .brand-logo {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--brand-accent);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-dash {
+    padding: 3rem 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .mega-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(2rem, 8vw, 4.5rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+  }
+
+  /* Карточки банковских продуктов */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .offer-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s var(--cb-brake), border-color 0.2s var(--cb-brake);
+
+    &:hover {
+      transform: translateY(-4px);
+      border-color: var(--brand-accent);
+    }
+  }
+
+  .offer-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: color-mix(in oklch, var(--brand-accent) 20%, transparent);
+    color: var(--brand-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .offer-val {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0.5rem 0;
+  }
+
+  /* Кнопки действий CTA */
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    background: var(--brand-accent);
+    color: oklch(0.10 0.02 80);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.15s var(--cb-brake), background-color 0.15s var(--cb-brake);
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--text-main);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Калькулятор выгоды */
+  .calc-box {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 3rem 0;
+  }
+
+  .calc-range {
+    width: 100%;
+    margin: 1rem 0;
+    accent-color: var(--brand-accent);
+  }
+}
+
+/* Адаптивность для отключения движения */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
