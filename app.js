@@ -263,7 +263,6 @@ class BankCodeVideoEngine {
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Запуск Интерактивной Вертикальной Цифровой Матрицы с текстом в столбик
   const introCanvas = document.getElementById("introCanvas");
-  const introSkipBtn = document.getElementById("introSkipBtn");
   const replayIntroBtn = document.getElementById("replayIntroBtn");
 
   if (introCanvas) {
@@ -272,10 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     introEngine.start();
-
-    if (introSkipBtn) {
-      introSkipBtn.addEventListener("click", () => introEngine.skip());
-    }
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") introEngine.skip();
