@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Все Банки — Онлайн Финансовый Портал: Карты, Кредиты, Вклады, Займы</title>
-  <meta name="description" content="Официальный агрегатор финансовых продуктов банков и МФО России с лицензией ЦБ РФ. Дебетовые карты с кэшбэком до 15%, вклады до 18.01%, кредиты и займы онлайн за 2 минуты.">
+  <meta name="description" content="Полный каталог финансовых продуктов банков и МФО России с лицензией ЦБ РФ. Дебетовые карты с кэшбэком до 15%, вклады до 18.01%, кредиты и займы онлайн за 2 минуты.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Unbounded:wght@500;700;900&family=Jost:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@
 
       <!-- SOTA Code-Video Волновой индикатор -->
       <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; background: var(--color-bg-card);">
-        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem;">
+        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
           <span>ДИНАМИКА КЛЮЧЕВОЙ СТАВКИ ЦБ РФ (60 FPS)</span>
           <span>ОБНОВЛЕНО В РЕАЛЬНОМ ВРЕМЕНИ</span>
         </div>
@@ -75,12 +75,12 @@
       </div>
     </section>
 
-    <!-- Интерактивный Калькулятор Выгоды -->
+    <!-- Интерактивный Калькулятор Выгоды с идеальной симметрией -->
     <section class="calc-box" id="calculator">
       <h2 class="calc-header">Калькулятор выгоды и ежемесячного платежа</h2>
       <p style="color: var(--color-text-muted); font-size: 0.95rem;">Укажите сумму и срок — калькулятор высчитает аннуитетный платеж и вероятность одобрения</p>
 
-      <div style="margin-top: 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="calc-inputs-grid">
         <div>
           <label style="font-family:'JetBrains Mono', monospace; font-size: 0.85rem; display:flex; justify-content:space-between;">
             <span>СУММА КРЕДИТА / ВКЛАДА:</span>
@@ -97,10 +97,10 @@
         </div>
       </div>
 
-      <div style="margin-top: 1.5rem; padding: 1.25rem; background: var(--color-bg-dark); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border: 1px solid var(--color-border);">
+      <div class="calc-result-bar">
         <div>
           <div style="font-size: 0.8rem; color: var(--color-text-muted); font-family:'JetBrains Mono', monospace;">ЕЖЕМЕСЯЧНЫЙ ПЛАТЕЖ</div>
-          <div id="calcResult" style="font-family:'Unbounded', sans-serif; font-size: 2.2rem; color: var(--color-gold); font-weight:700;">27 480 ₽/мес</div>
+          <div id="calcResult" class="calc-result-val">27 480 ₽/мес</div>
         </div>
         <a href="#catalog" class="btn-primary" data-analytics-event="calc_submit_lead">Зафиксировать условия</a>
       </div>
@@ -141,8 +141,8 @@
               <li>• Паспорт РФ, от 18 лет</li>
             </ul>
           </div>
-          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
-            <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_tbank_black">Оформить</a>
+          <div class="card-actions">
+            <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_tbank_black">Оформить</a>
             <button class="btn-ghost open-modal-btn" data-title="Т-Банк Black" data-desc="Бесплатное обслуживание при остатке от 50 000 ₽. Выбор 4 категорий повышенного кэшбэка каждый месяц.">Условия</button>
           </div>
         </article>
@@ -165,8 +165,8 @@
               <li>• Страхование АСВ до 1.4 млн ₽</li>
             </ul>
           </div>
-          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
-            <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_tbank_vklad">Открыть вклад</a>
+          <div class="card-actions">
+            <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_tbank_vklad">Открыть вклад</a>
             <button class="btn-ghost open-modal-btn" data-title="Т-Банк Вклад" data-desc="Проценты выплачиваются ежемесячно на карту или капитализируются. Возможность досрочного изъятия без потери всех процентов.">Условия</button>
           </div>
         </article>
@@ -189,8 +189,8 @@
               <li>• Снятие наличных без комиссии</li>
             </ul>
           </div>
-          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
-            <a href="https://alfabank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_alfa_credit">Получить</a>
+          <div class="card-actions">
+            <a href="https://alfabank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_alfa_credit">Получить</a>
             <button class="btn-ghost open-modal-btn" data-title="Альфа-Банк 365 дней" data-desc="365 дней без процентов на покупки в первые 30 дней с момента оформления. Бесплатное снятие наличных до 50 000 ₽ в месяц.">Условия</button>
           </div>
         </article>
@@ -213,8 +213,8 @@
               <li>• Без поручителей и справок</li>
             </ul>
           </div>
-          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
-            <a href="https://sberbank.ru" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_sber_credit">Рассчитать</a>
+          <div class="card-actions">
+            <a href="https://sberbank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_sber_credit">Рассчитать</a>
             <button class="btn-ghost open-modal-btn" data-title="Сбербанк Кредит" data-desc="Выдача на карту Сбербанка за 2 минуты. Без визита в офис для клиентов Сбера.">Условия</button>
           </div>
         </article>
@@ -237,8 +237,8 @@
               <li>• Перевод на любую карту РФ</li>
             </ul>
           </div>
-          <div style="display:flex; gap:0.5rem; margin-top: 1rem;">
-            <a href="https://ekapusta.com" target="_blank" rel="noopener" class="btn-primary" style="flex:1" data-analytics-event="apply_ekapusta">Взять 0%</a>
+          <div class="card-actions">
+            <a href="https://ekapusta.com" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_ekapusta">Взять 0%</a>
             <button class="btn-ghost open-modal-btn" data-title="еКапуста 0%" data-desc="0% ставка для новых клиентов при условии своевременного погашения займа в срок до 21 дня.">Условия</button>
           </div>
         </article>

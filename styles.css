@@ -19,6 +19,16 @@
     --color-text-muted: color-mix(in oklch, var(--color-text-bright) 65%, transparent);
     --color-border: color-mix(in oklch, var(--color-text-bright) 18%, transparent);
 
+    /* Safe Area Insets (HIG / Material) */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+
+    /* Touch Targets */
+    --touch-target-min: 44px;
+
+    /* Easing */
     --cb-brake: cubic-bezier(0.16, 1, 0.3, 1);
     --cb-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
@@ -54,12 +64,13 @@
   .main-wrap {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1.25rem;
+    padding-left: max(1rem, var(--safe-left));
+    padding-right: max(1rem, var(--safe-right));
   }
 }
 
 @layer components {
-  /* Текстурное зерно */
+  /* Зернистая текстура */
   .grain {
     position: fixed;
     inset: 0;
@@ -69,12 +80,12 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* Рельсовая шапка */
+  /* Шапка сайта */
   .hud-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.85rem 1.5rem;
+    padding: max(0.85rem, var(--safe-top)) max(1.25rem, var(--safe-right)) 0.85rem max(1.25rem, var(--safe-left));
     background: var(--color-bg-card);
     border-bottom: 2px solid var(--color-border);
     position: sticky;
@@ -123,7 +134,7 @@
 
   /* Hero Секция */
   .hero-sec {
-    padding: 3.5rem 0 2rem;
+    padding: clamp(2rem, 5vw, 3.5rem) 0 2rem;
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -137,19 +148,21 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .mega-title {
     font-family: 'Russo One', sans-serif;
-    font-size: clamp(2.5rem, 9vw, 5.5rem);
+    font-size: clamp(2.2rem, 8.5vw, 5.5rem);
     line-height: 0.95;
     text-transform: uppercase;
     color: var(--color-text-bright);
     margin-bottom: 1.25rem;
+    word-break: break-word;
   }
 
   .hero-lede {
-    font-size: 1.15rem;
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
     color: var(--color-text-muted);
     max-width: 58ch;
     margin-bottom: 2rem;
@@ -158,7 +171,7 @@
   /* Панель Телеметрии */
   .telemetry-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--color-border);
     border: 1px solid var(--color-border);
@@ -169,12 +182,12 @@
 
   .telem-cell {
     background: var(--color-bg-card);
-    padding: 1.25rem;
+    padding: clamp(0.85rem, 3vw, 1.25rem);
 
     & b {
       display: block;
       font-family: 'Unbounded', sans-serif;
-      font-size: 1.6rem;
+      font-size: clamp(1.2rem, 3.5vw, 1.6rem);
       color: var(--color-gold);
       line-height: 1.1;
     }
@@ -182,58 +195,88 @@
     & span {
       display: block;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
+      font-size: clamp(0.65rem, 1.8vw, 0.75rem);
       text-transform: uppercase;
       color: var(--color-text-muted);
       margin-top: 0.25rem;
     }
   }
 
-  /* Калькулятор Выгоды */
+  /* Калькулятор Выгоды — Симметричные Отступы */
   .calc-box {
     background: var(--color-bg-card);
     border: 2px solid var(--color-border);
     border-radius: 12px;
-    padding: 2.25rem;
-    margin: 3rem 0;
+    padding: clamp(1.25rem, 4vw, 2.25rem);
+    margin: 2.5rem 0;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   }
 
   .calc-header {
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     text-transform: uppercase;
     margin-bottom: 0.5rem;
   }
 
-  .calc-range {
-    width: 100%;
-    margin: 1rem 0;
-    accent-color: var(--color-gold);
-    cursor: pointer;
+  .calc-inputs-grid {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Категории и Табы */
+  .calc-range {
+    width: 100%;
+    margin: 0.75rem 0;
+    accent-color: var(--color-gold);
+    cursor: pointer;
+    min-height: 36px;
+  }
+
+  .calc-result-bar {
+    margin-top: 1.5rem;
+    padding: clamp(1rem, 3vw, 1.25rem);
+    background: var(--color-bg-dark);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .calc-result-val {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    color: var(--color-gold);
+    font-weight: 700;
+  }
+
+  /* Табы Категорий */
   .category-nav {
     display: flex;
     gap: 0.5rem;
     overflow-x: auto;
-    padding-bottom: 0.5rem;
-    margin: 2rem 0 1.5rem;
+    padding: 0.25rem 0 0.75rem;
+    margin: 1.5rem 0;
     scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
   }
 
   .tab-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    justify-content: center;
+    min-height: var(--touch-target-min);
+    padding: 0.6rem 1.1rem;
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: 6px;
     color: var(--color-text-muted);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
@@ -247,18 +290,18 @@
     }
   }
 
-  /* Карточки банковских предложений */
+  /* Карточки Предложений */
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
   }
 
   .card-item {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: clamp(1.1rem, 3.5vw, 1.5rem);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -273,7 +316,7 @@
   .card-head {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
     margin-bottom: 1rem;
   }
 
@@ -281,15 +324,17 @@
     width: 44px;
     height: 44px;
     border-radius: 8px;
-    background: #fff;
+    background: #ffffff;
     padding: 4px;
     object-fit: contain;
+    flex-shrink: 0;
   }
 
   .card-title {
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--color-text-bright);
+    line-height: 1.2;
   }
 
   .card-bank {
@@ -299,20 +344,38 @@
     text-transform: uppercase;
   }
 
+  .offer-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: color-mix(in oklch, var(--color-gold) 20%, transparent);
+    color: var(--color-gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
   .card-val {
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.65rem;
     font-weight: 700;
     color: var(--color-gold);
     margin: 0.5rem 0;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
   }
 
   .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
-    padding: 0.75rem 1.5rem;
+    min-height: var(--touch-target-min);
+    padding: 0.75rem 1.25rem;
     background: var(--color-gold);
     color: var(--color-bg-dark);
     font-family: 'Unbounded', sans-serif;
@@ -338,7 +401,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
+    min-height: var(--touch-target-min);
     padding: 0.5rem 1rem;
     background: transparent;
     color: var(--color-text-bright);
@@ -379,8 +442,8 @@
     background: var(--color-bg-card);
     border: 2px solid var(--color-gold);
     border-radius: 12px;
-    padding: 2rem;
-    max-width: 600px;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    max-width: 560px;
     width: 100%;
     position: relative;
   }
@@ -392,12 +455,59 @@
     background: transparent;
     border: none;
     color: var(--color-text-muted);
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 
-/* Адаптивность кreduced-motion */
+/* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ (320px - 768px) */
+@media (max-width: 768px) {
+  .hud-status {
+    display: none;
+  }
+
+  .calc-inputs-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .calc-result-bar {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .calc-result-bar .btn-primary {
+    width: 100%;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .card-actions .btn-primary,
+  .card-actions .btn-ghost {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .telemetry-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calc-box {
+    padding: 1rem;
+  }
+}
+
+/* Адаптивность к reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
