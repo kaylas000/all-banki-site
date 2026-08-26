@@ -26,13 +26,24 @@ class BankMatrixVideoEngine {
   }
 
   init() {
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-    const colCount = Math.floor(w / this.fontSize);
+    this.resize();
+    window.addEventListener("resize", () => this.resize());
+  }
 
+  resize() {
+    if (!this.canvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = this.canvas.getBoundingClientRect();
+    const w = rect.width || window.innerWidth;
+    const h = rect.height || window.innerHeight;
+
+    this.canvas.width = Math.round(w * dpr);
+    this.canvas.height = Math.round(h * dpr);
+
+    const colCount = Math.floor(this.canvas.width / (this.fontSize * dpr));
     this.columns = Array.from({ length: colCount }, () => ({
-      y: Math.random() * -h,
-      speed: 3 + Math.random() * 6,
+      y: Math.random() * -this.canvas.height,
+      speed: (3 + Math.random() * 6) * dpr,
       chars: Array.from({ length: 25 }, () => this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)])
     }));
   }
@@ -63,26 +74,29 @@ class BankMatrixVideoEngine {
 
     const w = this.canvas.width;
     const h = this.canvas.height;
+    const f = this.frame;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     // 1. Тёмный фон с легким размытием шлейфа (Matrix Rain Trail)
     ctx.fillStyle = "rgba(12, 11, 8, 0.25)";
     ctx.fillRect(0, 0, w, h);
 
     // 2. РЕНДЕР ВЕРТИКАЛЬНОЙ ЦИФРОВОЙ МАТРИЦЫ (Matrix Code Rain)
-    ctx.font = "700 14px 'JetBrains Mono', monospace";
+    const fontPx = Math.round(14 * dpr);
+    ctx.font = `700 ${fontPx}px 'JetBrains Mono', monospace`;
 
     this.columns.forEach((col, i) => {
-      const x = i * this.fontSize;
+      const x = i * fontPx;
       col.y += col.speed;
 
       if (col.y > h + 100) {
         col.y = -Math.random() * 200;
-        col.speed = 3 + Math.random() * 6;
+        col.speed = (3 + Math.random() * 6) * dpr;
       }
 
       // Отрисовка цепочки падающих цифр и символов
       col.chars.forEach((char, charIdx) => {
-        const charY = col.y - charIdx * (this.fontSize + 2);
+        const charY = col.y - charIdx * (fontPx + 2);
         if (charY > 0 && charY < h) {
           if (charIdx === 0) {
             ctx.fillStyle = "#ffffff";
@@ -101,7 +115,7 @@ class BankMatrixVideoEngine {
       });
     });
 
-    // 3. РЕНДЕР ТЕКСТА В СТОЛБИК ПО СЦЕНАРИЮ:
+    // 3. РЕНДЕР КРУПНОГО ТЕКСТА В СТОЛБИК ПО СЦЕНАРИЮ (Адаптивный размер в пикселях):
     //    ВИТРИНА
     //    КРЕДИТОВ
     //    ЗАЙМОВ
@@ -111,8 +125,10 @@ class BankMatrixVideoEngine {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    const startY = h * 0.3;
-    const lineHeight = Math.min(76, h * 0.2);
+    // Динамический чистый расчёт шрифта для Canvas 2D
+    const titleFontSize = Math.max(32 * dpr, Math.round(w * 0.085));
+    const startY = h * 0.28;
+    const lineHeight = titleFontSize * 1.25;
 
     this.columnText.forEach((word, lineIdx) => {
       const lineProgress = Math.min(1, Math.max(0, (textProgress - lineIdx * lineStep) / lineStep));
@@ -137,9 +153,9 @@ class BankMatrixVideoEngine {
         ctx.globalAlpha = Math.min(1, lineProgress * 2);
 
         ctx.shadowColor = "#e0a91c";
-        ctx.shadowBlur = 24 * lineProgress;
+        ctx.shadowBlur = 24 * lineProgress * dpr;
 
-        ctx.font = "900 clamp(36px, 8vw, 68px) 'Russo One', sans-serif";
+        ctx.font = `900 ${titleFontSize}px 'Russo One', sans-serif`;
         ctx.fillStyle = "#e0a91c";
         ctx.fillText(displayWord, 0, 0);
 
@@ -160,7 +176,7 @@ class BankMatrixVideoEngine {
       overlay.classList.add("is-done");
       setTimeout(() => {
         overlay.style.display = "none";
-      }, 850);
+      }, 600);
     }
     if (this.onDone) this.onDone();
   }
