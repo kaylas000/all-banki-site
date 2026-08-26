@@ -24,10 +24,6 @@
 
   <!-- 🎬 ВЕБ-ВИДЕО ЗАСТАВКА: ВЕРТИКАЛЬНАЯ ЦИФРОВАЯ МАТРИЦА С ТЕКСТОМ В СТОЛБИК (SK-06 / SK-16) -->
   <div class="intro-overlay" id="introOverlay" role="presentation">
-    <div class="intro-hud-top">
-      <button class="intro-skip-btn" id="introSkipBtn" type="button" data-analytics-event="intro_skip_click">Пропустить Esc</button>
-    </div>
-
     <div class="intro-canvas-container">
       <canvas id="introCanvas" width="1280" height="720" style="width:100%; height:100%; display:block;" aria-label="Вертикальная цифровая матрица с текстом в столбик"></canvas>
     </div>
@@ -40,7 +36,7 @@
       <span class="brand-badge">2026</span>
     </a>
     <div class="hud-status">
-      <button id="replayIntroBtn" class="intro-skip-btn" style="margin-right: 1rem;" data-analytics-event="replay_intro_click">↻ Матрица Заставка</button>
+      <button id="replayIntroBtn" class="tab-btn" style="margin-right: 1rem;" data-analytics-event="replay_intro_click">↻ Матрица Заставка</button>
       <span class="led-dot"></span>
       <span>ЛИЦЕНЗИИ ЦБ РФ · 30+ ПРОДУКТОВ</span>
     </div>
@@ -79,7 +75,7 @@
 
       <!-- SOTA Code-Video Движок (SK-16 / К-19): детерминированная кинематика ставок -->
       <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; background: var(--color-bg-card);">
-        <div style="display:flex; justify-space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
+        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
           <span>КОДОВОЕ ВИДЕО: ДИНАМИКА СТАВОК ЦБ РФ (SK-16 · 60 FPS)</span>
           <span>TIME VIRTUALIZATION ENGINE</span>
         </div>
