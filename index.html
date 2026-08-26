@@ -35,7 +35,7 @@
   </header>
 
   <main class="main-wrap">
-    <!-- Hero Секция с телеметрией и видео -->
+    <!-- Hero Секция с телеметрией и кодовым видео -->
     <section class="hero-sec" id="console">
       <div class="hero-cap">
         <span>НАРЯД № FIN-2026-01</span> · <span>ОФИЦИАЛЬНЫЙ РЕЕСТР СТАВОК</span>
@@ -44,28 +44,6 @@
       <p class="hero-lede">
         Честный расчет процентных ставок и кэшбэка без скрытых комиссий. Онлайн-одобрение заявки за 2 минуты без визита в банк.
       </p>
-
-      <!-- Видеопрезентация финансового портала -->
-      <div class="hero-video-wrapper">
-        <video 
-          class="hero-video-element" 
-          src="hero-video.mp4" 
-          autoplay 
-          loop 
-          muted 
-          playsinline 
-          poster="assets/img/hero-poster.png">
-        </video>
-        <div class="hero-video-overlay">
-          <div class="hero-video-hud">
-            <span>● REC FINANCIAL MONITOR 2026</span>
-            <span>HD VIDEO STREAM</span>
-          </div>
-          <div style="font-family:'Unbounded', sans-serif; font-size:1.1rem; color:var(--color-text-bright); text-shadow:0 2px 8px rgba(0,0,0,0.9);">
-            Умная финансовая консоль сравнения ставок
-          </div>
-        </div>
-      </div>
 
       <!-- Панель Телеметрии Ставок -->
       <div class="telemetry-grid">
@@ -87,17 +65,17 @@
         </div>
       </div>
 
-      <!-- SOTA Code-Video Волновой индикатор -->
-      <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; background: var(--color-bg-card);">
-        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
-          <span>ДИНАМИКА КЛЮЧЕВОЙ СТАВКИ ЦБ РФ (60 FPS)</span>
-          <span>ОБНОВЛЕНО В РЕАЛЬНОМ ВРЕМЕНИ</span>
+      <!-- SOTA Code-Video Движок (SK-16 / К-19): детерминированная кинематика ставок -->
+      <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; background: var(--color-bg-card);">
+        <div style="display:flex; justify-space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
+          <span>КОДОВОЕ ВИДЕО: ДИНАМИКА СТАВОК ЦБ РФ (SK-16 · 60 FPS)</span>
+          <span>TIME VIRTUALIZATION ENGINE</span>
         </div>
-        <canvas id="rateCanvas" width="800" height="100" style="width: 100%; height: 100px; display: block;" aria-label="Волновой графический индикатор"></canvas>
+        <canvas id="rateCanvas" width="800" height="120" style="width: 100%; height: 120px; display: block;" aria-label="Детерминированное кодовое видео ставок"></canvas>
       </div>
     </section>
 
-    <!-- Интерактивный Калькулятор Выгоды -->
+    <!-- Интерактивный Калькулятор Выгоды с идеальной симметрией -->
     <section class="calc-box" id="calculator">
       <h2 class="calc-header">Калькулятор выгоды и ежемесячного платежа</h2>
       <p style="color: var(--color-text-muted); font-size: 0.95rem;">Укажите сумму и срок — калькулятор высчитает аннуитетный платеж и вероятность одобрения</p>
