@@ -1,29 +1,42 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — CineLine Scroll-Driven Code-Video Engine (SK-03 / SK-16) */
+/* Все Банки — SOTA 2026 Interactive Web Video Showcase Engine (SK-16) */
 /* ------------------------------------------------------------------ */
 
-class BankCineLineEngine {
+class BankWebVideoShowcaseEngine {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    this.progress = 0;
     this.frame = 0;
+    this.totalFrames = 240; // 4 секунды при 60 FPS
+    this.fps = 60;
+    this.isPlaying = true;
+    this.soundEnabled = false;
+    this.ac = null;
 
-    this.acts = [
+    this.scenes = [
       {
-        tag: "АКТ I · АНАЛИЗ И СЕКВЕНЦИЯ",
-        title: "Сборка базы предложений 20+ банков",
-        desc: "Автоматический фильтр комиссии, проверка лицензий ЦБ РФ и расчет ПСК."
+        startFrame: 0,
+        endFrame: 60,
+        badge: "СЦЕНА 1 ИЗ 4 · АНАЛИЗ БАЗЫ БАНКОВ",
+        title: "Мониторинг предложений 20+ банков ЦБ РФ"
       },
       {
-        tag: "АКТ II · КАЛЬКУЛЯЦИЯ ВЫГОДЫ",
-        title: "Аннуитетный расчет ставок и кэшбэка",
-        desc: "Перерасчет процента на остаток и льготного периода за 1 миллисекунду."
+        startFrame: 60,
+        endFrame: 120,
+        badge: "СЦЕНА 2 ИЗ 4 · КАРТЫ И КРЕДИТЫ",
+        title: "Лучшие кредитные карты с кэшбэком до 15%"
       },
       {
-        tag: "АКТ III · МГНОВЕННОЕ ОДОБРЕНИЕ",
-        title: "Фиксация условий и подача онлайн-заявки",
-        desc: "Защищенный передаточный канал с решением за 2 минуты без визита в банк."
+        startFrame: 120,
+        endFrame: 180,
+        badge: "СЦЕНА 3 ИЗ 4 · КАЛЬКУЛЯЦИЯ СТАВОК",
+        title: "Вклады до 18.01% годовых и 0% займы МФО"
+      },
+      {
+        startFrame: 180,
+        endFrame: 240,
+        badge: "СЦЕНА 4 ИЗ 4 · ОДОБРЕНИЕ ЗА 2 МИНУТЫ",
+        title: "Шанс одобрения 98% по паспорту РФ"
       }
     ];
 
@@ -31,117 +44,255 @@ class BankCineLineEngine {
   }
 
   init() {
-    this.particles = Array.from({ length: 400 }, () => ({
-      x: Math.random() * this.canvas.width,
-      y: Math.random() * this.canvas.height,
-      tx: Math.random() * this.canvas.width,
-      ty: Math.random() * this.canvas.height,
-      size: 1.2 + Math.random() * 2.5,
-      color: Math.random() < 0.25 ? "rgba(224, 169, 28, 0.85)" : "rgba(232, 230, 222, 0.4)"
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    this.particles = Array.from({ length: 350 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 2,
+      vy: (Math.random() - 0.5) * 2,
+      size: 1.2 + Math.random() * 2.8,
+      color: Math.random() < 0.3 ? "#e0a91c" : "#1d3a5f"
     }));
   }
 
-  setScrub(p) {
-    this.progress = Math.min(1, Math.max(0, p));
-    this.frame = Math.round(this.progress * 204); // 204 кадров SOTA
-    this.render();
+  setFrame(f) {
+    this.frame = Math.min(this.totalFrames - 1, Math.max(0, f));
+    this.renderCurrentFrame();
   }
 
-  render() {
+  togglePlay() {
+    this.isPlaying = !this.isPlaying;
+    return this.isPlaying;
+  }
+
+  toggleSound() {
+    this.soundEnabled = !this.soundEnabled;
+    if (this.soundEnabled && !this.ac) {
+      try {
+        const Ctor = window.AudioContext || window.webkitAudioContext;
+        this.ac = new Ctor();
+      } catch (e) {
+        this.ac = null;
+      }
+    }
+    if (this.soundEnabled && this.ac && this.ac.state === "suspended") {
+      this.ac.resume().catch(() => undefined);
+    }
+    return this.soundEnabled;
+  }
+
+  playAudioClick() {
+    if (!this.soundEnabled || !this.ac) return;
+    try {
+      const t = this.ac.currentTime;
+      const osc = this.ac.createOscillator();
+      const gain = this.ac.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(440, t);
+      osc.frequency.exponentialRampToValueAtTime(110, t + 0.1);
+      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      osc.connect(gain);
+      gain.connect(this.ac.destination);
+      osc.start(t);
+      osc.stop(t + 0.1);
+    } catch (e) {
+      // Audio fallback
+    }
+  }
+
+  renderCurrentFrame() {
     const ctx = this.ctx;
     if (!ctx) return;
 
     const w = this.canvas.width;
     const h = this.canvas.height;
-    const p = this.progress;
+    const f = this.frame;
+    const progress = f / this.totalFrames;
 
-    // Trail motion blur
+    // Motion Blur Trail Effect
     ctx.fillStyle = "rgba(15, 14, 10, 0.35)";
     ctx.fillRect(0, 0, w, h);
 
-    // Grid
+    // 1. Blueprint Grid Lines
     ctx.strokeStyle = "rgba(224, 169, 28, 0.08)";
     ctx.lineWidth = 1;
     for (let x = 0; x < w; x += 44) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     }
+    for (let y = 0; y < h; y += 44) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
 
-    // Interactive Conveyor Line
-    const lineY = h * 0.7;
-    ctx.strokeStyle = "rgba(232, 230, 222, 0.25)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, lineY);
-    ctx.lineTo(w, lineY);
-    ctx.stroke();
-
-    // Moving Workpiece Box
-    const boxX = p * (w - 140);
-    ctx.fillStyle = "oklch(0.18 0.03 260)";
-    ctx.strokeStyle = "#e0a91c";
-    ctx.lineWidth = 2;
-    ctx.fillRect(boxX, lineY - 40, 140, 40);
-    ctx.strokeRect(boxX, lineY - 40, 140, 40);
-
-    ctx.fillStyle = "#e0a91c";
-    ctx.font = "700 11px 'JetBrains Mono', monospace";
-    ctx.fillText(`CINE-FRAME #${String(this.frame).padStart(3, "0")}`, boxX + 12, lineY - 18);
-
-    // Particles Motion Assembly
-    this.particles.forEach((pt, i) => {
-      const curX = pt.x + (pt.tx - pt.x) * p + Math.sin(p * Math.PI * 6 + i) * 12;
-      const curY = pt.y + (pt.ty - pt.y) * p + Math.cos(p * Math.PI * 6 + i) * 12;
+    // 2. Animated Particle Flow
+    this.particles.forEach((pt) => {
+      pt.x += pt.vx;
+      pt.y += pt.vy;
+      if (pt.x < 0 || pt.x > w) pt.vx *= -1;
+      if (pt.y < 0 || pt.y > h) pt.vy *= -1;
 
       ctx.fillStyle = pt.color;
       ctx.beginPath();
-      ctx.arc(curX, curY, pt.size, 0, Math.PI * 2);
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
       ctx.fill();
     });
 
-    // Telemetry Text
-    ctx.font = "700 10px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "rgba(232, 230, 222, 0.5)";
-    ctx.fillText(`CINE-LINE SCRUBBING · PROGRESS: ${(p * 100).toFixed(1)}%`, 16, h - 16);
+    // 3. Scene-specific 3D Canvas Graphics
+    if (f < 60) {
+      // Scene 1: 3D Gold Symbol & Title
+      const p1 = f / 60;
+      ctx.save();
+      ctx.translate(w / 2, h / 2 - 20);
+      ctx.scale(0.5 + p1 * 0.5, 0.5 + p1 * 0.5);
 
-    // Update Overlay Info text based on Scrub Act
-    const actIdx = Math.min(2, Math.floor(p * 3));
-    const currentAct = this.acts[actIdx];
+      ctx.fillStyle = "#e0a91c";
+      ctx.font = "900 64px 'Russo One', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("₽ ВСЕ БАНКИ", 0, 0);
+      ctx.restore();
+    } else if (f < 120) {
+      // Scene 2: Flying Bank Cards in 3D Isometric Projection
+      const p2 = (f - 60) / 60;
+      const cardWidth = 220;
+      const cardHeight = 130;
 
-    const tagEl = document.querySelector("#cineInfo .cineline-tag");
-    const titleEl = document.querySelector("#cineInfo .cineline-title");
-    const descEl = document.querySelector("#cineInfo .cineline-desc");
+      // Card 1 (T-Bank)
+      ctx.save();
+      ctx.translate(w * 0.25, h * 0.4 + Math.sin(p2 * Math.PI * 2) * 10);
+      ctx.rotate(-0.08);
+      ctx.fillStyle = "#16150f";
+      ctx.strokeStyle = "#e0a91c";
+      ctx.lineWidth = 2;
+      ctx.fillRect(-cardWidth / 2, -cardHeight / 2, cardWidth, cardHeight);
+      ctx.strokeRect(-cardWidth / 2, -cardHeight / 2, cardWidth, cardHeight);
+      ctx.fillStyle = "#e0a91c";
+      ctx.font = "700 14px 'Unbounded', sans-serif";
+      ctx.fillText("Т-БАНК BLACK", -cardWidth / 2 + 16, -cardHeight / 2 + 30);
+      ctx.font = "700 20px 'Unbounded', sans-serif";
+      ctx.fillText("15% КЭШБЭК", -cardWidth / 2 + 16, cardHeight / 2 - 20);
+      ctx.restore();
 
-    if (tagEl) tagEl.textContent = currentAct.tag;
-    if (titleEl) titleEl.textContent = currentAct.title;
-    if (descEl) descEl.textContent = currentAct.desc;
+      // Card 2 (Alfa-Bank)
+      ctx.save();
+      ctx.translate(w * 0.75, h * 0.4 - Math.sin(p2 * Math.PI * 2) * 10);
+      ctx.rotate(0.08);
+      ctx.fillStyle = "#16150f";
+      ctx.strokeStyle = "#ce2c18";
+      ctx.lineWidth = 2;
+      ctx.fillRect(-cardWidth / 2, -cardHeight / 2, cardWidth, cardHeight);
+      ctx.strokeRect(-cardWidth / 2, -cardHeight / 2, cardWidth, cardHeight);
+      ctx.fillStyle = "#ce2c18";
+      ctx.font = "700 14px 'Unbounded', sans-serif";
+      ctx.fillText("АЛЬФА-БАНК", -cardWidth / 2 + 16, -cardHeight / 2 + 30);
+      ctx.font = "700 20px 'Unbounded', sans-serif";
+      ctx.fillText("365 ДНЕЙ %", -cardWidth / 2 + 16, cardHeight / 2 - 20);
+      ctx.restore();
+    } else if (f < 180) {
+      // Scene 3: Rate Wave Curve
+      const p3 = (f - 120) / 60;
+      ctx.beginPath();
+      ctx.strokeStyle = "#e0a91c";
+      ctx.lineWidth = 4;
+      for (let x = 0; x < w; x += 5) {
+        const y = h * 0.5 + Math.sin((x + f * 4) * 0.02) * 40 * (1 - p3 * 0.3);
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = "#e0a91c";
+      ctx.font = "700 28px 'Unbounded', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("ВКЛАДЫ ДО 18.01% · ЗАЙМЫ 0%", w / 2, h * 0.25);
+    } else {
+      // Scene 4: Approval Gauge & Call to Action
+      const p4 = (f - 180) / 60;
+      ctx.fillStyle = "#2e7d4f";
+      ctx.font = "900 52px 'Russo One', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("ОДОБРЕНИЕ 98%", w / 2, h / 2 - 10);
+      ctx.fillStyle = "#e0a91c";
+      ctx.font = "700 16px 'JetBrains Mono', monospace";
+      ctx.fillText("ОНЛАЙН ЗАЯВКА ЗА 2 МИНУТЫ БЕЗ ВИЗИТА В БАНК", w / 2, h / 2 + 35);
+    }
+
+    // 4. Update HUD Text & Scrubber UI
+    const sceneIdx = Math.min(3, Math.floor(f / 60));
+    const currentScene = this.scenes[sceneIdx];
+
+    const badgeEl = document.getElementById("sceneBadge");
+    const titleEl = document.getElementById("sceneTitle");
+    const timerEl = document.getElementById("webVideoTimer");
+    const scrubberEl = document.getElementById("webVideoScrubber") as HTMLInputElement | null;
+
+    if (badgeEl) badgeEl.textContent = currentScene.badge;
+    if (titleEl) titleEl.textContent = currentScene.title;
+    if (timerEl) {
+      const sec = (f / 60).toFixed(1);
+      timerEl.textContent = `00:0${Math.floor(f / 60)} / 00:04 (${sec}s)`;
+    }
+    if (scrubberEl && document.activeElement !== scrubberEl) {
+      scrubberEl.value = String(f);
+    }
+  }
+
+  tick() {
+    if (!this.isPlaying) return;
+    this.frame = (this.frame + 1) % this.totalFrames;
+    this.renderCurrentFrame();
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. CineLine Scrubbing Engine
-  const cineCanvas = document.getElementById("cineCanvas");
-  const cineScrubber = document.getElementById("cineScrubber");
+  // 1. Инициализация SOTA Web Video Engine
+  const canvas = document.getElementById("webVideoCanvas") as HTMLCanvasElement | null;
+  const playBtn = document.getElementById("webVideoPlayBtn");
+  const restartBtn = document.getElementById("webVideoRestartBtn");
+  const scrubber = document.getElementById("webVideoScrubber") as HTMLInputElement | null;
+  const audioBtn = document.getElementById("webVideoAudioBtn");
 
-  if (cineCanvas && cineScrubber) {
-    const cineEngine = new BankCineLineEngine(cineCanvas);
-    cineEngine.setScrub(0);
+  if (canvas) {
+    const videoEngine = new BankWebVideoShowcaseEngine(canvas);
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    cineScrubber.addEventListener("input", (e) => {
-      const val = parseFloat(e.target.value) / 100;
-      cineEngine.setScrub(val);
-    });
-
-    // Автопрокрутка скроллом при входе во вьюпорт
-    window.addEventListener("scroll", () => {
-      const rect = cineCanvas.getBoundingClientRect();
-      const winH = window.innerHeight;
-
-      if (rect.top < winH && rect.bottom > 0) {
-        const p = Math.min(1, Math.max(0, (winH - rect.top) / (winH + rect.height)));
-        cineEngine.setScrub(p);
-        cineScrubber.value = Math.round(p * 100);
+    function loop() {
+      videoEngine.tick();
+      if (!isReduced) {
+        requestAnimationFrame(loop);
       }
-    }, { passive: true });
+    }
+
+    loop();
+
+    if (playBtn) {
+      playBtn.addEventListener("click", () => {
+        const playing = videoEngine.togglePlay();
+        playBtn.textContent = playing ? "⏸ Пауза" : "▶ Воспроизвести";
+        videoEngine.playAudioClick();
+      });
+    }
+
+    if (restartBtn) {
+      restartBtn.addEventListener("click", () => {
+        videoEngine.setFrame(0);
+        videoEngine.playAudioClick();
+      });
+    }
+
+    if (scrubber) {
+      scrubber.addEventListener("input", (e) => {
+        const f = parseInt((e.target as HTMLInputElement).value, 10);
+        videoEngine.setFrame(f);
+      });
+    }
+
+    if (audioBtn) {
+      audioBtn.addEventListener("click", () => {
+        const soundOn = videoEngine.toggleSound();
+        audioBtn.textContent = soundOn ? "🔊 Включен SFX" : "🔇 Выключен SFX";
+      });
+    }
   }
 
   // 2. Табы фильтрации

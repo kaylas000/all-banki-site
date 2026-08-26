@@ -168,8 +168,8 @@
     margin-bottom: 2rem;
   }
 
-  /* Кинематографический блок скролл-сторителлинга (SK-03 / CineLine) */
-  .cineline-box {
+  /* ВЕБ-ВИДЕО ПЛЕЕР (SK-16 SOTA CODE VIDEO) */
+  .webvideo-section {
     background: var(--color-bg-card);
     border: 2px solid var(--color-gold);
     border-radius: 12px;
@@ -178,7 +178,7 @@
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
   }
 
-  .cineline-hud {
+  .webvideo-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -186,32 +186,32 @@
     background: var(--color-bg-subtle);
     border-bottom: 1px solid var(--color-border);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--color-gold);
   }
 
-  .cineline-canvas-wrap {
+  .webvideo-canvas-wrapper {
     position: relative;
     width: 100%;
-    min-height: 320px;
-    background: oklch(0.08 0.02 260);
+    min-height: 380px;
+    background: #080705;
   }
 
-  .cineline-overlay-info {
+  .webvideo-scene-caption {
     position: absolute;
     bottom: 1.25rem;
     left: 1.25rem;
     right: 1.25rem;
-    background: rgba(15, 14, 10, 0.88);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 14, 10, 0.9);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-gold);
-    padding: 1.25rem;
+    border-left: 4px solid var(--color-gold);
+    padding: 1rem 1.25rem;
     border-radius: 8px;
     pointer-events: none;
   }
 
-  .cineline-tag {
+  .scene-num-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     color: var(--color-gold);
@@ -219,22 +219,41 @@
     letter-spacing: 0.15em;
   }
 
-  .cineline-title {
+  .scene-title-text {
     font-family: 'Unbounded', sans-serif;
-    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
     color: var(--color-text-bright);
-    margin: 0.25rem 0;
+    margin-top: 0.25rem;
   }
 
-  .cineline-desc {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-  }
-
-  .cineline-controls {
-    padding: 1rem 1.25rem;
+  .webvideo-controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
     background: var(--color-bg-subtle);
     border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+
+  .btn-video-ctrl {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-bright);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    min-height: 40px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--color-gold);
+      color: var(--color-bg-dark);
+      font-weight: 700;
+    }
   }
 
   /* Панель Телеметрии */
@@ -563,6 +582,11 @@
   .card-actions .btn-primary,
   .card-actions .btn-ghost {
     width: 100%;
+  }
+
+  .webvideo-controls-bar {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 

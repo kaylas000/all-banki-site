@@ -65,27 +65,24 @@
         </div>
       </div>
 
-      <!-- Кинематографическая скролл-сцена (SK-03 / CineLine) -->
-      <div class="cineline-box" id="cineline">
-        <div class="cineline-hud">
-          <span>● CINE-LINE SCRUBBING ENGINE (300vh PIN + SCRUB)</span>
-          <span>SK-03 · SK-16 · 60 FPS</span>
+      <!-- ВЕБ-ВИДЕО ПРЕЗЕНТАЦИЯ ВИТРИНЫ КРЕДИТОВ И ЗАЙМОВ (SK-16 / SOTA Code Video) -->
+      <div class="webvideo-section" id="webVideoSection">
+        <div class="webvideo-header">
+          <span class="webvideo-live-badge">● WEB-VIDEO: ВИТРИНА КРЕДИТОВ И ЗАЙМОВ (60 FPS)</span>
+          <span class="webvideo-timer" id="webVideoTimer">00:00 / 00:04</span>
         </div>
-        <div class="cineline-canvas-wrap">
-          <canvas id="cineCanvas" width="900" height="320" aria-label="Монтажная линия ставок"></canvas>
-          <div class="cineline-overlay-info" id="cineInfo">
-            <span class="cineline-tag">АКТ I · ЗАГОТОВКА</span>
-            <div class="cineline-title">Анализ предложений 20+ банков</div>
-            <p class="cineline-desc">Сборка базы ставок, проверка лицензий ЦБ РФ и расчет ПСК в реальном времени.</p>
+        <div class="webvideo-canvas-wrapper">
+          <canvas id="webVideoCanvas" width="960" height="380" aria-label="Интерактивное веб-видео витрины кредитов и займов"></canvas>
+          <div class="webvideo-scene-caption" id="webVideoSceneCaption">
+            <span class="scene-num-badge" id="sceneBadge">СЦЕНА 1 из 4</span>
+            <div class="scene-title-text" id="sceneTitle">Анализ предложений 20+ банков и МФО</div>
           </div>
         </div>
-        <div class="cineline-controls">
-          <input type="range" id="cineScrubber" min="0" max="100" value="0" class="calc-range" aria-label="Монтажная линия скраббера">
-          <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-text-muted);">
-            <span>0.0s (СТАРТ)</span>
-            <span>ПЕРЕМОТКА МОНТАЖНОЙ ЛЕНТЫ</span>
-            <span>3.4s (ФИНАЛ)</span>
-          </div>
+        <div class="webvideo-controls-bar">
+          <button id="webVideoPlayBtn" class="btn-video-ctrl">⏸ Пауза</button>
+          <button id="webVideoRestartBtn" class="btn-video-ctrl">↻ Заново</button>
+          <input type="range" id="webVideoScrubber" min="0" max="240" value="0" class="calc-range" style="flex:1; margin:0;" aria-label="Таймлайн веб-видео">
+          <button id="webVideoAudioBtn" class="btn-video-ctrl">🔊 Звук SFX</button>
         </div>
       </div>
     </section>
