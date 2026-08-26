@@ -22,6 +22,21 @@
 <body class="container-ctx">
   <div class="grain" aria-hidden="true"></div>
 
+  <!-- 🎬 КИНОЗАСТАВКА ПЕРЕД САЙТОМ (SK-06 / INTRO ENGINE) -->
+  <div class="intro-overlay" id="introOverlay" role="presentation">
+    <div class="shutter-l"></div>
+    <div class="shutter-r"></div>
+
+    <div class="intro-hud-top">
+      <span>● ПРЕМЬЕРА · ВСЕ БАНКИ 2026 (SK-06)</span>
+      <button class="intro-skip-btn" id="introSkipBtn" type="button" data-analytics-event="intro_skip_click">Пропустить Esc</button>
+    </div>
+
+    <div class="intro-canvas-container">
+      <canvas id="introCanvas" width="1280" height="720" style="width:100%; height:100%; display:block;" aria-label="Кинозаставка перед сайтом"></canvas>
+    </div>
+  </div>
+
   <!-- Рельсовая шапка -->
   <header class="hud-header">
     <a class="brand-title" href="./" data-analytics-event="logo_click">
@@ -29,6 +44,7 @@
       <span class="brand-badge">2026</span>
     </a>
     <div class="hud-status">
+      <button id="replayIntroBtn" class="intro-skip-btn" style="margin-right: 1rem;" data-analytics-event="replay_intro_click">↻ Заставка SK-06</button>
       <span class="led-dot"></span>
       <span>ЛИЦЕНЗИИ ЦБ РФ · 20+ БАНКОВ</span>
     </div>
@@ -65,29 +81,17 @@
         </div>
       </div>
 
-      <!-- ВЕБ-ВИДЕО ПРЕЗЕНТАЦИЯ ВИТРИНЫ КРЕДИТОВ И ЗАЙМОВ (SK-16 / SOTA Code Video) -->
-      <div class="webvideo-section" id="webVideoSection">
-        <div class="webvideo-header">
-          <span class="webvideo-live-badge">● WEB-VIDEO: ВИТРИНА КРЕДИТОВ И ЗАЙМОВ (60 FPS)</span>
-          <span class="webvideo-timer" id="webVideoTimer">00:00 / 00:04</span>
+      <!-- SOTA Code-Video Движок (SK-16 / К-19): детерминированная кинематика ставок -->
+      <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; background: var(--color-bg-card);">
+        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
+          <span>КОДОВОЕ ВИДЕО: ДИНАМИКА СТАВОК ЦБ РФ (SK-16 · 60 FPS)</span>
+          <span>TIME VIRTUALIZATION ENGINE</span>
         </div>
-        <div class="webvideo-canvas-wrapper">
-          <canvas id="webVideoCanvas" width="960" height="380" aria-label="Интерактивное веб-видео витрины кредитов и займов"></canvas>
-          <div class="webvideo-scene-caption" id="webVideoSceneCaption">
-            <span class="scene-num-badge" id="sceneBadge">СЦЕНА 1 из 4</span>
-            <div class="scene-title-text" id="sceneTitle">Анализ предложений 20+ банков и МФО</div>
-          </div>
-        </div>
-        <div class="webvideo-controls-bar">
-          <button id="webVideoPlayBtn" class="btn-video-ctrl">⏸ Пауза</button>
-          <button id="webVideoRestartBtn" class="btn-video-ctrl">↻ Заново</button>
-          <input type="range" id="webVideoScrubber" min="0" max="240" value="0" class="calc-range" style="flex:1; margin:0;" aria-label="Таймлайн веб-видео">
-          <button id="webVideoAudioBtn" class="btn-video-ctrl">🔊 Звук SFX</button>
-        </div>
+        <canvas id="rateCanvas" width="800" height="120" style="width: 100%; height: 120px; display: block;" aria-label="Детерминированное кодовое видео ставок"></canvas>
       </div>
     </section>
 
-    <!-- Интерактивный Калькулятор Выгоды -->
+    <!-- Интерактивный Калькулятор Выгоды с идеальной симметрией -->
     <section class="calc-box" id="calculator">
       <h2 class="calc-header">Калькулятор выгоды и ежемесячного платежа</h2>
       <p style="color: var(--color-text-muted); font-size: 0.95rem;">Укажите сумму и срок — калькулятор высчитает аннуитетный платеж и вероятность одобрения</p>

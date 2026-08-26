@@ -80,6 +80,79 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
+  /* 🎬 КИНОЗАСТАВКА ПЕРЕД САЙТОМ (SK-06 / INTRO ENGINE) */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0f0e0a;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+
+    &.is-done {
+      pointer-events: none;
+    }
+  }
+
+  /* Кино-шторки opening */
+  .shutter-l, .shutter-r {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background: #0f0e0a;
+    z-index: 10;
+    transition: transform 0.85s var(--cb-brake);
+  }
+
+  .shutter-l { left: 0; border-right: 1px solid var(--color-gold); }
+  .shutter-r { right: 0; border-left: 1px solid var(--color-gold); }
+
+  .intro-overlay.is-done .shutter-l { transform: translateX(-101%); }
+  .intro-overlay.is-done .shutter-r { transform: translateX(101%); }
+
+  .intro-canvas-container {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+  }
+
+  .intro-hud-top {
+    position: absolute;
+    top: max(1rem, var(--safe-top));
+    left: max(1rem, var(--safe-left));
+    right: max(1rem, var(--safe-right));
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--color-gold);
+  }
+
+  .intro-skip-btn {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-bright);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    min-height: 40px;
+    transition: all 0.2s var(--cb-brake);
+
+    &:hover {
+      background: var(--color-gold);
+      color: var(--color-bg-dark);
+      font-weight: 700;
+    }
+  }
+
   /* Шапка сайта */
   .hud-header {
     display: flex;
@@ -166,94 +239,6 @@
     color: var(--color-text-muted);
     max-width: 58ch;
     margin-bottom: 2rem;
-  }
-
-  /* ВЕБ-ВИДЕО ПЛЕЕР (SK-16 SOTA CODE VIDEO) */
-  .webvideo-section {
-    background: var(--color-bg-card);
-    border: 2px solid var(--color-gold);
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 2rem 0;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-  }
-
-  .webvideo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1.25rem;
-    background: var(--color-bg-subtle);
-    border-bottom: 1px solid var(--color-border);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--color-gold);
-  }
-
-  .webvideo-canvas-wrapper {
-    position: relative;
-    width: 100%;
-    min-height: 380px;
-    background: #080705;
-  }
-
-  .webvideo-scene-caption {
-    position: absolute;
-    bottom: 1.25rem;
-    left: 1.25rem;
-    right: 1.25rem;
-    background: rgba(15, 14, 10, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--color-border);
-    border-left: 4px solid var(--color-gold);
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    pointer-events: none;
-  }
-
-  .scene-num-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--color-gold);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-
-  .scene-title-text {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
-    color: var(--color-text-bright);
-    margin-top: 0.25rem;
-  }
-
-  .webvideo-controls-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 1.25rem;
-    background: var(--color-bg-subtle);
-    border-top: 1px solid var(--color-border);
-    flex-wrap: wrap;
-  }
-
-  .btn-video-ctrl {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-bright);
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    cursor: pointer;
-    min-height: 40px;
-    transition: all 0.15s ease;
-
-    &:hover {
-      background: var(--color-gold);
-      color: var(--color-bg-dark);
-      font-weight: 700;
-    }
   }
 
   /* Панель Телеметрии */
@@ -583,11 +568,6 @@
   .card-actions .btn-ghost {
     width: 100%;
   }
-
-  .webvideo-controls-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
 }
 
 @media (max-width: 480px) {
@@ -607,5 +587,8 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .intro-overlay {
+    display: none !important;
   }
 }
