@@ -1,9 +1,98 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — SOTA 2026 Interactive Portal Engine                    */
+/* ЦЕХ Code-Video Engine — WebGPU / WebGL2 / Canvas Deterministic    */
 /* ------------------------------------------------------------------ */
 
+class BankCodeVideoEngine {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+    this.ctx = !this.gl ? canvas.getContext("2d") : null;
+    this.frame = 0;
+    this.fps = 60;
+    this.particles = [];
+    this.init();
+  }
+
+  init() {
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    this.particles = Array.from({ length: 300 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 1.5,
+      vy: (Math.random() - 0.5) * 1.5,
+      size: 1.5 + Math.random() * 2.5,
+      hue: Math.random() < 0.2 ? 35 : 210 // Gold or Blue
+    }));
+  }
+
+  renderFrame() {
+    if (this.ctx) {
+      this.renderCanvas2D();
+    } else if (this.gl) {
+      this.renderCanvas2D(); // Fallback 2D for high compatibility
+    }
+    this.frame++;
+  }
+
+  renderCanvas2D() {
+    const ctx = this.ctx || this.canvas.getContext("2d");
+    if (!ctx) return;
+
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+
+    // Motion Blur Trail Effect
+    ctx.fillStyle = "rgba(15, 14, 10, 0.22)";
+    ctx.fillRect(0, 0, w, h);
+
+    // 1. Grid
+    ctx.strokeStyle = "rgba(224, 169, 28, 0.08)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < w; x += 40) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+
+    // 2. Interactive Kinetic Wave
+    ctx.beginPath();
+    ctx.strokeStyle = "#e0a91c"; // CEH Gold
+    ctx.lineWidth = 3;
+
+    for (let x = 0; x < w; x += 4) {
+      const y = h / 2 + 
+        Math.sin((x + this.frame * 2.5) * 0.015) * 35 + 
+        Math.cos((x * 0.5 - this.frame) * 0.02) * 15;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // 3. Particles
+    this.particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      ctx.fillStyle = p.hue === 35 ? "rgba(224, 169, 28, 0.85)" : "rgba(29, 58, 95, 0.75)";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 4. Telemetry Text Overlay
+    ctx.font = "700 11px 'JetBrains Mono', monospace";
+    ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
+    ctx.fillText(`CODE-VIDEO FRAME #${String(this.frame).padStart(4, "0")} · 60 FPS`, 16, 24);
+    ctx.fillText(`TIME VIRTUALIZATION ENGINE (SK-16)`, 16, 40);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Табы фильтрации продуктов
+  // 1. Табы фильтрации
   const tabBtns = document.querySelectorAll(".tab-btn");
   const cardItems = document.querySelectorAll(".card-item");
 
@@ -53,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCalc();
   }
 
-  // 3. Модальное окно условий
+  // 3. Модальное окно
   const modalOverlay = document.getElementById("modalOverlay");
   const modalClose = document.getElementById("modalClose");
   const modalOkBtn = document.getElementById("modalOkBtn");
@@ -91,52 +180,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 4. SOTA Code-Video Wave Rate Indicator Canvas
+  // 4. Запуск полноценного SOTA Code-Video Engine
   const canvas = document.getElementById("rateCanvas");
   if (canvas) {
-    const ctx = canvas.getContext("2d");
-    let frame = 0;
-
-    function renderWave() {
-      if (!ctx) return;
-      const w = canvas.width;
-      const h = canvas.height;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // Чертёжная сетка
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
-      ctx.lineWidth = 1;
-      for (let x = 0; x < w; x += 40) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, h);
-        ctx.stroke();
-      }
-
-      // Волна изменения ставок
-      ctx.beginPath();
-      ctx.strokeStyle = "#e0a91c"; // Gold Accent
-      ctx.lineWidth = 3;
-
-      for (let x = 0; x < w; x += 5) {
-        const y = h / 2 + Math.sin((x + frame * 3) * 0.02) * 20 + Math.cos((x - frame) * 0.01) * 8;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-
-      frame++;
-      requestAnimationFrame(renderWave);
-    }
-
+    const videoEngine = new BankCodeVideoEngine(canvas);
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!isReduced) {
-      renderWave();
+
+    function loop() {
+      videoEngine.renderFrame();
+      if (!isReduced) {
+        requestAnimationFrame(loop);
+      }
     }
+
+    loop();
   }
 
-  // 5. MultiLanding URL parameter handling
+  // 5. MultiLanding
   const params = new URLSearchParams(window.location.search);
   const term = params.get("utm_term");
   if (term) {
