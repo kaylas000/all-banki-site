@@ -16,12 +16,11 @@ class BankMatrixVideoEngine {
     this.columns = [];
     this.matrixChars = "0123456789%₽$ABCDEF18.01%365ДНЕЙКЭШБЭК";
 
-    // Сценарий текста в столбик:
+    // Сценарий текста в столбик (3 строки без "И"):
     // ВИТРИНА
     // КРЕДИТОВ
-    // И
     // ЗАЙМОВ
-    this.columnText = ["ВИТРИНА", "КРЕДИТОВ", "И", "ЗАЙМОВ"];
+    this.columnText = ["ВИТРИНА", "КРЕДИТОВ", "ЗАЙМОВ"];
 
     this.init();
   }
@@ -64,7 +63,6 @@ class BankMatrixVideoEngine {
 
     const w = this.canvas.width;
     const h = this.canvas.height;
-    const f = this.frame;
 
     // 1. Тёмный фон с легким размытием шлейфа (Matrix Rain Trail)
     ctx.fillStyle = "rgba(12, 11, 8, 0.25)";
@@ -87,17 +85,13 @@ class BankMatrixVideoEngine {
         const charY = col.y - charIdx * (this.fontSize + 2);
         if (charY > 0 && charY < h) {
           if (charIdx === 0) {
-            // Головная яркая цифра матрицы
             ctx.fillStyle = "#ffffff";
           } else if (charIdx < 4) {
-            // Золотистый градиент матрицы ЦЕХа
             ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
           } else {
-            // Изумрудно-зеленый след матрицы
             ctx.fillStyle = "rgba(46, 125, 79, 0.4)";
           }
 
-          // Иногда меняем случайный символ в дожде
           const displayChar = (Math.random() < 0.05) 
             ? this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)] 
             : char;
@@ -110,7 +104,6 @@ class BankMatrixVideoEngine {
     // 3. РЕНДЕР ТЕКСТА В СТОЛБИК ПО СЦЕНАРИЮ:
     //    ВИТРИНА
     //    КРЕДИТОВ
-    //    И
     //    ЗАЙМОВ
     const textProgress = Math.min(1, Math.max(0, (p - 0.1) / 0.8));
     const lineStep = 1 / this.columnText.length;
@@ -118,8 +111,8 @@ class BankMatrixVideoEngine {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    const startY = h * 0.25;
-    const lineHeight = Math.min(64, h * 0.15);
+    const startY = h * 0.3;
+    const lineHeight = Math.min(76, h * 0.2);
 
     this.columnText.forEach((word, lineIdx) => {
       const lineProgress = Math.min(1, Math.max(0, (textProgress - lineIdx * lineStep) / lineStep));
@@ -141,27 +134,18 @@ class BankMatrixVideoEngine {
         ctx.save();
         ctx.translate(w / 2, lineY);
 
-        // Плавное проявление и выравнивание
         ctx.globalAlpha = Math.min(1, lineProgress * 2);
 
-        // Вспышка свечения текста при проявлении
         ctx.shadowColor = "#e0a91c";
-        ctx.shadowBlur = 20 * lineProgress;
+        ctx.shadowBlur = 24 * lineProgress;
 
-        ctx.font = "900 clamp(28px, 6vw, 56px) 'Russo One', sans-serif";
-        ctx.fillStyle = lineIdx === 2 ? "#ce2c18" : "#e0a91c"; // "И" подсвечено красным, остальные золотом
+        ctx.font = "900 clamp(36px, 8vw, 68px) 'Russo One', sans-serif";
+        ctx.fillStyle = "#e0a91c";
         ctx.fillText(displayWord, 0, 0);
 
         ctx.restore();
       }
     });
-
-    // 4. ТИТРЫ КАДРА (SOTA Telemetry)
-    ctx.font = "700 11px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
-    ctx.textAlign = "left";
-    ctx.fillText(`КАДР ${String(Math.min(240, f)).padStart(3, "0")}/240 · 60 FPS · ВЕРТИКАЛЬНАЯ МАТРИЦА`, 24, h - 34);
-    ctx.fillText(`ВИТРИНА КРЕДИТОВ И ЗАЙМОВ (SK-06 / SK-16)`, 24, h - 18);
   }
 
   skip() {
