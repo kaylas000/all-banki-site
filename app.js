@@ -1,24 +1,27 @@
 /* ------------------------------------------------------------------ */
-/* Все Банки — РАДИКАЛЬНЫЙ 4-АКТНЫЙ КИНО-ДВИЖОК ВЕБ-ВИДЕО (SK-06/16)  */
+/* Все Банки — SOTA 2026 Interactive Vertical Matrix Web-Video Engine  */
 /* ------------------------------------------------------------------ */
 
-class RadicalBankVideoIntroEngine {
+// 🎬 ИНТЕРАКТИВНАЯ ВЕРТИКАЛЬНАЯ ЦИФРОВАЯ МАТРИЦА С ТЕКСТОМ В СТОЛБИК
+class BankMatrixVideoEngine {
   constructor(canvas, onDone) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.onDone = onDone;
     this.frame = 0;
-    this.totalFrames = 240; // 4.0 сек при 60 FPS
+    this.totalFrames = 240; // 4.0 секунды при 60 FPS
+    this.fps = 60;
     this.isPlaying = true;
-    this.soundEnabled = false;
-    this.ac = null;
+    this.fontSize = 16;
+    this.columns = [];
+    this.matrixChars = "0123456789%₽$ABCDEF18.01%365ДНЕЙКЭШБЭК";
 
-    this.acts = [
-      { id: "I", tag: "АКТ I · СКАНЕР РЫНКА", title: "Мониторинг 20+ банков ЦБ РФ", sub: "Ставка 18.01% · ПСК 0%" },
-      { id: "II", tag: "АКТ II · 3D-КАРТЫ И ВКЛАДЫ", title: "Т-Банк, Альфа, Сбер, еКапуста", sub: "Кэшбэк 15% · 365 дней 0%" },
-      { id: "III", tag: "АКТ III · ФИКСАЦИЯ СТАВКИ", title: "ОДОБРЕНИЕ ЗАЯВКИ 98%", sub: "Без справок и визита в банк" },
-      { id: "IV", tag: "АКТ IV · ШТОРКИ К САЙТУ", title: "ОТКРЫТИЕ ФИНАНСОВОЙ КОНСОЛИ", sub: "Доступ разрешен 24/7" }
-    ];
+    // Сценарий текста в столбик:
+    // ВИТРИНА
+    // КРЕДИТОВ
+    // И
+    // ЗАЙМОВ
+    this.columnText = ["ВИТРИНА", "КРЕДИТОВ", "И", "ЗАЙМОВ"];
 
     this.init();
   }
@@ -26,18 +29,13 @@ class RadicalBankVideoIntroEngine {
   init() {
     const w = this.canvas.width;
     const h = this.canvas.height;
+    const colCount = Math.floor(w / this.fontSize);
 
-    // 3D Графический массив частиц с Z-координатой
-    this.particles = Array.from({ length: 1800 }, () => ({
-      x: (Math.random() - 0.5) * w * 2.5,
-      y: (Math.random() - 0.5) * h * 2.5,
-      z: Math.random() * 1000 + 1,
-      size: 1.5 + Math.random() * 3.0,
-      color: Math.random() < 0.4 ? "#e0a91c" : Math.random() < 0.7 ? "#1d3a5f" : "#e8e6de"
+    this.columns = Array.from({ length: colCount }, () => ({
+      y: Math.random() * -h,
+      speed: 3 + Math.random() * 6,
+      chars: Array.from({ length: 25 }, () => this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)])
     }));
-
-    // Код символов скрэмбла
-    this.scrambleChars = "0123456789%₽ВСЕБАНКИ#/_=";
   }
 
   start() {
@@ -48,7 +46,7 @@ class RadicalBankVideoIntroEngine {
     if (!this.isPlaying) return;
 
     const p = this.frame / this.totalFrames;
-    this.renderRadicalFrame(p);
+    this.renderMatrixFrame(p);
 
     this.frame++;
 
@@ -60,7 +58,7 @@ class RadicalBankVideoIntroEngine {
     requestAnimationFrame(this.loop);
   };
 
-  renderRadicalFrame(p) {
+  renderMatrixFrame(p) {
     const ctx = this.ctx;
     if (!ctx) return;
 
@@ -68,145 +66,102 @@ class RadicalBankVideoIntroEngine {
     const h = this.canvas.height;
     const f = this.frame;
 
-    // 1. Темный кинематографический фон с анаморфным зерном
-    ctx.fillStyle = "#0c0b08";
+    // 1. Тёмный фон с легким размытием шлейфа (Matrix Rain Trail)
+    ctx.fillStyle = "rgba(12, 11, 8, 0.25)";
     ctx.fillRect(0, 0, w, h);
 
-    // 2. Чертёжная координатная сетка
-    ctx.strokeStyle = "rgba(224, 169, 28, 0.06)";
-    ctx.lineWidth = 1;
-    for (let x = 0; x < w; x += 44) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-    }
-    for (let y = 0; y < h; y += 44) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
+    // 2. РЕНДЕР ВЕРТИКАЛЬНОЙ ЦИФРОВОЙ МАТРИЦЫ (Matrix Code Rain)
+    ctx.font = "700 14px 'JetBrains Mono', monospace";
 
-    // 3. РЕНДЕР 4 АКТОВ СЦЕНАРИЯ
-    if (f < 60) {
-      // ----------------------------------------------------
-      // АКТ I: ТЕХНИЧЕСКИЙ ХАОС И СКАНЕР (0.0s - 1.0s)
-      // ----------------------------------------------------
-      const p1 = f / 60;
-      
-      // Вращающийся сканирующий луч
-      ctx.save();
-      ctx.translate(w / 2, h / 2);
-      ctx.rotate(p1 * Math.PI * 2);
-      ctx.strokeStyle = "rgba(224, 169, 28, 0.35)";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(0, 0, 140, 0, Math.PI * 1.5);
-      ctx.stroke();
-      ctx.restore();
+    this.columns.forEach((col, i) => {
+      const x = i * this.fontSize;
+      col.y += col.speed;
 
-      // Бегающие строки валют и ставок
-      ctx.font = "700 12px 'JetBrains Mono', monospace";
-      ctx.fillStyle = "rgba(232, 230, 222, 0.6)";
-      ctx.textAlign = "center";
-      ctx.fillText(`ЦБ РФ: 18.01% · Т-БАНК: 15% · АЛЬФА: 365 ДНЕЙ · СБЕР: 5 МЛН ₽`, w / 2, h * 0.35);
-      ctx.fillText(`СКАНЕР ИНДЕКСАЦИИ СТАВОК... ${Math.round(p1 * 100)}%`, w / 2, h * 0.65);
-
-    } else if (f < 130) {
-      // ----------------------------------------------------
-      // АКТ II: ПОЛЁТ 3D-КАРТ И ЗОЛОТЫХ МОНЕТ (1.0s - 2.1s)
-      // ----------------------------------------------------
-      const p2 = (f - 60) / 70;
-      const cardW = 240;
-      const cardH = 140;
-
-      // 3D Карта 1: Т-Банк Black (смещение слева)
-      ctx.save();
-      ctx.translate(w * 0.3 - (1 - p2) * 200, h * 0.45 + Math.sin(p2 * Math.PI * 3) * 12);
-      ctx.rotate(-0.1 + Math.sin(p2 * Math.PI) * 0.05);
-      ctx.fillStyle = "#16150f";
-      ctx.strokeStyle = "#e0a91c";
-      ctx.lineWidth = 3;
-      ctx.fillRect(-cardW / 2, -cardH / 2, cardW, cardH);
-      ctx.strokeRect(-cardW / 2, -cardH / 2, cardW, cardH);
-
-      ctx.fillStyle = "#e0a91c";
-      ctx.font = "900 15px 'Unbounded', sans-serif";
-      ctx.fillText("Т-БАНК BLACK", -cardW / 2 + 16, -cardH / 2 + 32);
-      ctx.font = "700 22px 'Unbounded', sans-serif";
-      ctx.fillText("15% КЭШБЭК", -cardW / 2 + 16, cardH / 2 - 20);
-      ctx.restore();
-
-      // 3D Карта 2: Альфа-Банк 365 (смещение справа)
-      ctx.save();
-      ctx.translate(w * 0.7 + (1 - p2) * 200, h * 0.45 - Math.cos(p2 * Math.PI * 3) * 12);
-      ctx.rotate(0.1 - Math.sin(p2 * Math.PI) * 0.05);
-      ctx.fillStyle = "#16150f";
-      ctx.strokeStyle = "#ce2c18";
-      ctx.lineWidth = 3;
-      ctx.fillRect(-cardW / 2, -cardH / 2, cardW, cardH);
-      ctx.strokeRect(-cardW / 2, -cardH / 2, cardW, cardH);
-
-      ctx.fillStyle = "#ce2c18";
-      ctx.font = "900 15px 'Unbounded', sans-serif";
-      ctx.fillText("АЛЬФА-БАНК 365", -cardW / 2 + 16, -cardH / 2 + 32);
-      ctx.font = "700 22px 'Unbounded', sans-serif";
-      ctx.fillText("365 ДНЕЙ 0%", -cardW / 2 + 16, cardH / 2 - 20);
-      ctx.restore();
-
-    } else if (f < 190) {
-      // ----------------------------------------------------
-      // АКТ III: УДАР ШТАМПА И ГОЛД-ФЛЭШ (2.1s - 3.1s)
-      // ----------------------------------------------------
-      const p3 = (f - 130) / 60;
-      const easeImpact = (p3 >= 1) ? 1 : 1 - Math.pow(2, -10 * p3);
-
-      // Анаморфная золотая вспышка по центру
-      const flareG = ctx.createLinearGradient(0, h / 2, w, h / 2);
-      flareG.addColorStop(0, "rgba(224,169,28,0)");
-      flareG.addColorStop(0.5, `rgba(224,169,28,${0.75 * (1 - p3)})`);
-      flareG.addColorStop(1, "rgba(224,169,28,0)");
-      ctx.fillStyle = flareG;
-      ctx.fillRect(0, h / 2 - 4, w, 8);
-
-      // Грандиозный заголовок
-      ctx.save();
-      ctx.translate(w / 2, h / 2 - 20);
-      ctx.scale(1.8 - 0.8 * easeImpact, 1.8 - 0.8 * easeImpact);
-
-      ctx.font = "900 76px 'Russo One', sans-serif";
-      ctx.fillStyle = "#e0a91c";
-      ctx.textAlign = "center";
-      ctx.fillText("ВСЕ БАНКИ", 0, 0);
-      ctx.restore();
-
-      // Штамп одобрения
-      if (p3 > 0.4) {
-        ctx.font = "900 20px 'Unbounded', sans-serif";
-        ctx.fillStyle = "#2e7d4f";
-        ctx.textAlign = "center";
-        ctx.fillText("✓ ОДОБРЕНИЕ ЗАЯВКИ 98% · ОНЛАЙН 2 МИН", w / 2, h / 2 + 55);
+      if (col.y > h + 100) {
+        col.y = -Math.random() * 200;
+        col.speed = 3 + Math.random() * 6;
       }
 
-    } else {
-      // ----------------------------------------------------
-      // АКТ IV: РАЗДВИЖЕНИЕ ШТОР И ВЫХОД (3.1s - 4.0s)
-      // ----------------------------------------------------
-      ctx.font = "900 76px 'Russo One', sans-serif";
-      ctx.fillStyle = "#e0a91c";
-      ctx.textAlign = "center";
-      ctx.fillText("ВСЕ БАНКИ", w / 2, h / 2 - 20);
+      // Отрисовка цепочки падающих цифр и символов
+      col.chars.forEach((char, charIdx) => {
+        const charY = col.y - charIdx * (this.fontSize + 2);
+        if (charY > 0 && charY < h) {
+          if (charIdx === 0) {
+            // Головная яркая цифра матрицы
+            ctx.fillStyle = "#ffffff";
+          } else if (charIdx < 4) {
+            // Золотистый градиент матрицы ЦЕХа
+            ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
+          } else {
+            // Изумрудно-зеленый след матрицы
+            ctx.fillStyle = "rgba(46, 125, 79, 0.4)";
+          }
 
-      ctx.font = "700 16px 'JetBrains Mono', monospace";
-      ctx.fillStyle = "#e8e6de";
-      ctx.fillText("ОТКРЫТИЕ ФИНАНСОВОЙ КОНСОЛИ...", w / 2, h / 2 + 55);
-    }
+          // Иногда меняем случайный символ в дожде
+          const displayChar = (Math.random() < 0.05) 
+            ? this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)] 
+            : char;
 
-    // 4. ТИТРЫ И ТЕЛЕМЕТРИЯ КАДРА
-    const actIdx = Math.min(3, Math.floor(f / 60));
-    const curAct = this.acts[actIdx];
+          ctx.fillText(displayChar, x, charY);
+        }
+      });
+    });
 
+    // 3. РЕНДЕР ТЕКСТА В СТОЛБИК ПО СЦЕНАРИЮ:
+    //    ВИТРИНА
+    //    КРЕДИТОВ
+    //    И
+    //    ЗАЙМОВ
+    const textProgress = Math.min(1, Math.max(0, (p - 0.1) / 0.8));
+    const lineStep = 1 / this.columnText.length;
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const startY = h * 0.25;
+    const lineHeight = Math.min(64, h * 0.15);
+
+    this.columnText.forEach((word, lineIdx) => {
+      const lineProgress = Math.min(1, Math.max(0, (textProgress - lineIdx * lineStep) / lineStep));
+
+      if (lineProgress > 0) {
+        const lineY = startY + lineIdx * lineHeight;
+
+        // Эффект скрэмбл-декодирования символов
+        const settledCount = Math.floor(lineProgress * word.length * 1.2);
+        let displayWord = "";
+        for (let c = 0; c < word.length; c++) {
+          if (c < settledCount) {
+            displayWord += word[c];
+          } else {
+            displayWord += this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
+          }
+        }
+
+        ctx.save();
+        ctx.translate(w / 2, lineY);
+
+        // Плавное проявление и выравнивание
+        ctx.globalAlpha = Math.min(1, lineProgress * 2);
+
+        // Вспышка свечения текста при проявлении
+        ctx.shadowColor = "#e0a91c";
+        ctx.shadowBlur = 20 * lineProgress;
+
+        ctx.font = "900 clamp(28px, 6vw, 56px) 'Russo One', sans-serif";
+        ctx.fillStyle = lineIdx === 2 ? "#ce2c18" : "#e0a91c"; // "И" подсвечено красным, остальные золотом
+        ctx.fillText(displayWord, 0, 0);
+
+        ctx.restore();
+      }
+    });
+
+    // 4. ТИТРЫ КАДРА (SOTA Telemetry)
     ctx.font = "700 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
     ctx.textAlign = "left";
-    ctx.fillText(`КАДР ${String(f).padStart(3, "0")}/240 · 60 FPS · ${curAct.tag}`, 24, h - 36);
-    ctx.fillStyle = "rgba(232, 230, 222, 0.6)";
-    ctx.fillText(`${curAct.title} · ${curAct.sub}`, 24, h - 20);
+    ctx.fillText(`КАДР ${String(Math.min(240, f)).padStart(3, "0")}/240 · 60 FPS · ВЕРТИКАЛЬНАЯ МАТРИЦА`, 24, h - 34);
+    ctx.fillText(`ВИТРИНА КРЕДИТОВ И ЗАЙМОВ (SK-06 / SK-16)`, 24, h - 18);
   }
 
   skip() {
@@ -215,6 +170,7 @@ class RadicalBankVideoIntroEngine {
 
   finish() {
     this.isPlaying = false;
+    sessionStorage.setItem("allbanki-intro-seen", "1");
     const overlay = document.getElementById("introOverlay");
     if (overlay) {
       overlay.classList.add("is-done");
@@ -305,14 +261,14 @@ class BankCodeVideoEngine {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Запуск Радикального 4-актного Кино-видео интро
+  // 1. Запуск Интерактивной Вертикальной Цифровой Матрицы с текстом в столбик
   const introCanvas = document.getElementById("introCanvas");
   const introSkipBtn = document.getElementById("introSkipBtn");
   const replayIntroBtn = document.getElementById("replayIntroBtn");
 
   if (introCanvas) {
-    const introEngine = new RadicalBankVideoIntroEngine(introCanvas, () => {
-      console.log("[SK-06 / Radical Video] Радикальная заставка завершена, сайт открыт.");
+    const introEngine = new BankMatrixVideoEngine(introCanvas, () => {
+      console.log("[SK-06 / Matrix Video] Заставка с текстом в столбик завершена, сайт открыт.");
     });
 
     introEngine.start();
@@ -327,11 +283,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (replayIntroBtn) {
       replayIntroBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("allbanki-intro-seen");
         const overlay = document.getElementById("introOverlay");
         if (overlay) {
           overlay.style.display = "flex";
           overlay.classList.remove("is-done");
-          const reEngine = new RadicalBankVideoIntroEngine(introCanvas, () => {});
+          const reEngine = new BankMatrixVideoEngine(introCanvas, () => {});
           reEngine.start();
         }
       });
