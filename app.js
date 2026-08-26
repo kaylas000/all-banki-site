@@ -115,7 +115,7 @@ class BankMatrixVideoEngine {
       });
     });
 
-    // 3. РЕНДЕР КРУПНОГО ТЕКСТА В СТОЛБИК ПО СЦЕНАРИЮ (Адаптивный размер в пикселях):
+    // 3. РЕНДЕР МАССИВНОГО ГИГАНТСКОГО ТЕКСТА В СТОЛБИК ДЛЯ МОБИЛЬНЫХ:
     //    ВИТРИНА
     //    КРЕДИТОВ
     //    ЗАЙМОВ
@@ -125,10 +125,10 @@ class BankMatrixVideoEngine {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // Динамический чистый расчёт шрифта для Canvas 2D
-    const titleFontSize = Math.max(32 * dpr, Math.round(w * 0.085));
-    const startY = h * 0.28;
-    const lineHeight = titleFontSize * 1.25;
+    // РАДИКАЛЬНО УВЕЛИЧЕННЫЙ ШРИФТ ДЛЯ МОБИЛЬНЫХ
+    const titleFontSize = Math.max(52 * dpr, Math.round(w * 0.125));
+    const startY = h * 0.22;
+    const lineHeight = titleFontSize * 1.3;
 
     this.columnText.forEach((word, lineIdx) => {
       const lineProgress = Math.min(1, Math.max(0, (textProgress - lineIdx * lineStep) / lineStep));
@@ -153,7 +153,7 @@ class BankMatrixVideoEngine {
         ctx.globalAlpha = Math.min(1, lineProgress * 2);
 
         ctx.shadowColor = "#e0a91c";
-        ctx.shadowBlur = 24 * lineProgress * dpr;
+        ctx.shadowBlur = 32 * lineProgress * dpr;
 
         ctx.font = `900 ${titleFontSize}px 'Russo One', sans-serif`;
         ctx.fillStyle = "#e0a91c";
