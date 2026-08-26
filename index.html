@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Все Банки — Онлайн Финансовый Портал: Карты, Кредиты, Вклады, Займы</title>
+  <title>Все Банки — Официальный Финансовый Портал: Карты, Кредиты, Вклады, Займы МФО</title>
   <meta name="description" content="Полный каталог финансовых продуктов банков и МФО России с лицензией ЦБ РФ. Дебетовые карты с кэшбэком до 15%, вклады до 18.01%, кредиты и займы онлайн за 2 минуты.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +22,12 @@
 <body class="container-ctx">
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- 🎬 ВЕБ-ВИДЕО ЗАСТАВКА: ВЕРТИКАЛЬНАЯ ЦИФРОВАЯ МАТРИЦА С ТЕКСТОМ В СТОЛБИК -->
+  <!-- 🎬 ВЕБ-ВИДЕО ЗАСТАВКА: ВЕРТИКАЛЬНАЯ ЦИФРОВАЯ МАТРИЦА С ТЕКСТОМ В СТОЛБИК (SK-06 / SK-16) -->
   <div class="intro-overlay" id="introOverlay" role="presentation">
+    <div class="intro-hud-top">
+      <button class="intro-skip-btn" id="introSkipBtn" type="button" data-analytics-event="intro_skip_click">Пропустить Esc</button>
+    </div>
+
     <div class="intro-canvas-container">
       <canvas id="introCanvas" width="1280" height="720" style="width:100%; height:100%; display:block;" aria-label="Вертикальная цифровая матрица с текстом в столбик"></canvas>
     </div>
@@ -38,7 +42,7 @@
     <div class="hud-status">
       <button id="replayIntroBtn" class="intro-skip-btn" style="margin-right: 1rem;" data-analytics-event="replay_intro_click">↻ Матрица Заставка</button>
       <span class="led-dot"></span>
-      <span>ЛИЦЕНЗИИ ЦБ РФ · 20+ БАНКОВ</span>
+      <span>ЛИЦЕНЗИИ ЦБ РФ · 30+ ПРОДУКТОВ</span>
     </div>
   </header>
 
@@ -75,7 +79,7 @@
 
       <!-- SOTA Code-Video Движок (SK-16 / К-19): детерминированная кинематика ставок -->
       <div style="margin-top: 1.5rem; border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; background: var(--color-bg-card);">
-        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
+        <div style="display:flex; justify-space-between; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--color-gold); margin-bottom:0.5rem; flex-wrap:wrap;">
           <span>КОДОВОЕ ВИДЕО: ДИНАМИКА СТАВОК ЦБ РФ (SK-16 · 60 FPS)</span>
           <span>TIME VIRTUALIZATION ENGINE</span>
         </div>
@@ -127,11 +131,13 @@
         <button class="tab-btn" data-cat="mfo">Займы МФО</button>
         <button class="tab-btn" data-cat="credits">Кредиты</button>
         <button class="tab-btn" data-cat="mortgage">Ипотека</button>
+        <button class="tab-btn" data-cat="rko">РКО Бизнес</button>
       </div>
 
-      <!-- Сетка карточек -->
+      <!-- Полная Насыщенная Сетка карточек по 30+ продуктам -->
       <div class="card-grid" id="offersGrid">
-        <!-- Т-Банк Black -->
+
+        <!-- 1. Т-Банк Black -->
         <article class="card-item" data-category="debet">
           <div>
             <div class="card-head">
@@ -146,16 +152,16 @@
             <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
               <li>• 5% на остаток по счету</li>
               <li>• Доставка курьером за 1 день</li>
-              <li>• Паспорт РФ, от 18 лет</li>
+              <li>• Паспорт РФ, от 18 лет (Лицензия ЦБ №2673)</li>
             </ul>
           </div>
           <div class="card-actions">
             <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_tbank_black">Оформить</a>
-            <button class="btn-ghost open-modal-btn" data-title="Т-Банк Black" data-desc="Бесплатное обслуживание при остатке от 50 000 ₽. Выбор 4 категорий повышенного кэшбэка каждый месяц.">Условия</button>
+            <button class="btn-ghost open-modal-btn" data-title="Т-Банк Black" data-desc="Бесплатное обслуживание при остатке от 50 000 ₽. Выбор 4 категорий повышенного кэшбэка каждый месяц. Лицензия ЦБ РФ № 2673.">Условия</button>
           </div>
         </article>
 
-        <!-- Т-Банк Вклад -->
+        <!-- 2. Т-Банк Вклад -->
         <article class="card-item" data-category="deposits">
           <div>
             <div class="card-head">
@@ -175,11 +181,11 @@
           </div>
           <div class="card-actions">
             <a href="https://t-bank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_tbank_vklad">Открыть вклад</a>
-            <button class="btn-ghost open-modal-btn" data-title="Т-Банк Вклад" data-desc="Проценты выплачиваются ежемесячно на карту или капитализируются. Возможность досрочного изъятия без потери всех процентов.">Условия</button>
+            <button class="btn-ghost open-modal-btn" data-title="Т-Банк Вклад" data-desc="Проценты выплачиваются ежемесячно на карту или капитализируются. Возможность досрочного изъятия без потери всех процентов. Лицензия ЦБ РФ № 2673.">Условия</button>
           </div>
         </article>
 
-        <!-- Альфа-Банк 365 -->
+        <!-- 3. Альфа-Банк 365 -->
         <article class="card-item" data-category="kredit">
           <div>
             <div class="card-head">
@@ -199,11 +205,11 @@
           </div>
           <div class="card-actions">
             <a href="https://alfabank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_alfa_credit">Получить</a>
-            <button class="btn-ghost open-modal-btn" data-title="Альфа-Банк 365 дней" data-desc="365 дней без процентов на покупки в первые 30 дней с момента оформления. Бесплатное снятие наличных до 50 000 ₽ в месяц.">Условия</button>
+            <button class="btn-ghost open-modal-btn" data-title="Альфа-Банк 365 дней" data-desc="365 дней без процентов на покупки в первые 30 дней с момента оформления. Бесплатное снятие наличных до 50 000 ₽ в месяц. Лицензия ЦБ РФ № 1326.">Условия</button>
           </div>
         </article>
 
-        <!-- Сбербанк Кредит -->
+        <!-- 4. Сбербанк Кредит -->
         <article class="card-item" data-category="credits">
           <div>
             <div class="card-head">
@@ -223,11 +229,11 @@
           </div>
           <div class="card-actions">
             <a href="https://sberbank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_sber_credit">Рассчитать</a>
-            <button class="btn-ghost open-modal-btn" data-title="Сбербанк Кредит" data-desc="Выдача на карту Сбербанка за 2 минуты. Без визита в офис для клиентов Сбера.">Условия</button>
+            <button class="btn-ghost open-modal-btn" data-title="Сбербанк Кредит" data-desc="Выдача на карту Сбербанка за 2 минуты. Без визита в офис для клиентов Сбера. Лицензия ЦБ РФ № 1481.">Условия</button>
           </div>
         </article>
 
-        <!-- eKapusta Займ -->
+        <!-- 5. eKapusta Займ -->
         <article class="card-item" data-category="mfo">
           <div>
             <div class="card-head">
@@ -247,7 +253,127 @@
           </div>
           <div class="card-actions">
             <a href="https://ekapusta.com" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_ekapusta">Взять 0%</a>
-            <button class="btn-ghost open-modal-btn" data-title="еКапуста 0%" data-desc="0% ставка для новых клиентов при условии своевременного погашения займа в срок до 21 дня.">Условия</button>
+            <button class="btn-ghost open-modal-btn" data-title="еКапуста 0%" data-desc="0% ставка для новых клиентов при условии своевременного погашения займа в срок до 21 дня. Свидетельство МФО ЦБ РФ.">Условия</button>
+          </div>
+        </article>
+
+        <!-- 6. Займер -->
+        <article class="card-item" data-category="mfo">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/zaimer.svg" alt="Займер" class="card-logo">
+              <div>
+                <div class="card-bank">Займер</div>
+                <div class="card-title">Робот Займов 0%</div>
+              </div>
+            </div>
+            <span class="offer-badge">Авто-одобрение</span>
+            <div class="card-val">До 30 000 ₽</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• Скоринг за 1 минуту роботом</li>
+              <li>• Без проверки кредитной истории</li>
+              <li>• Выдача на карту мгновенно</li>
+            </ul>
+          </div>
+          <div class="card-actions">
+            <a href="https://zaimer.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_zaimer">Получить 0%</a>
+            <button class="btn-ghost open-modal-btn" data-title="Займер Робот" data-desc="Автоматическое решение без участия оператора 24/7. Первый займ под 0% до 30 дней.">Условия</button>
+          </div>
+        </article>
+
+        <!-- 7. Moneyman -->
+        <article class="card-item" data-category="mfo">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/moneyman.svg" alt="Moneyman" class="card-logo">
+              <div>
+                <div class="card-bank">Moneyman</div>
+                <div class="card-title">Займ Онлайн</div>
+              </div>
+            </div>
+            <span class="offer-badge">До 80 000 ₽</span>
+            <div class="card-val">0% первый</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• Срок от 5 до 126 дней</li>
+              <li>• Мгновенный перевод по СБП</li>
+              <li>• Высокий процент одобрения</li>
+            </ul>
+          </div>
+          <div class="card-actions">
+            <a href="https://moneyman.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_moneyman">Взять займ</a>
+            <button class="btn-ghost open-modal-btn" data-title="Moneyman" data-desc="Бонусные баллы за своевременную оплату. Перевод на карту, QIWI или через СБП.">Условия</button>
+          </div>
+        </article>
+
+        <!-- 8. ВТБ Вклад -->
+        <article class="card-item" data-category="deposits">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/vtb.svg" alt="ВТБ" class="card-logo">
+              <div>
+                <div class="card-bank">Банк ВТБ</div>
+                <div class="card-title">Вклад Выгодный</div>
+              </div>
+            </div>
+            <span class="offer-badge">Ставка ЦБ</span>
+            <div class="card-val">До 17.5%</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• От 10 000 ₽ до 10 млн ₽</li>
+              <li>• Срок от 3 месяцев до 3 лет</li>
+              <li>• Государственное страхование АСВ</li>
+            </ul>
+          </div>
+          <div class="card-actions">
+            <a href="https://vtb.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_vtb_deposit">Открыть вклад</a>
+            <button class="btn-ghost open-modal-btn" data-title="ВТБ Выгодный" data-desc="Выплата процентов в конце срока или ежемесячно на отдельный счет. Лицензия ЦБ РФ № 1000.">Условия</button>
+          </div>
+        </article>
+
+        <!-- 9. Совкомбанк Халва -->
+        <article class="card-item" data-category="kredit">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/sovcombank-user.svg" alt="Совкомбанк" class="card-logo">
+              <div>
+                <div class="card-bank">Совкомбанк</div>
+                <div class="card-title">Карта Рассрочки Халва</div>
+              </div>
+            </div>
+            <span class="offer-badge">Рассрочка 0%</span>
+            <div class="card-val">До 24 мес</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• 0% переплаты в 250 000 магазинах</li>
+              <li>• До 10% кэшбэка на свои деньги</li>
+              <li>• 0 ₽ обслуживание навсегда</li>
+            </ul>
+          </div>
+          <div class="card-actions">
+            <a href="https://sovcombank.ru" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_halva">Заказать Халву</a>
+            <button class="btn-ghost open-modal-btn" data-title="Совкомбанк Халва" data-desc="Бесплатная карта рассрочки с доставкой курьером. Лицензия ЦБ РФ № 963.">Условия</button>
+          </div>
+        </article>
+
+        <!-- 10. Точка Банк РКО -->
+        <article class="card-item" data-category="rko">
+          <div>
+            <div class="card-head">
+              <img src="assets/img/tochka.svg" alt="Точка" class="card-logo">
+              <div>
+                <div class="card-bank">Банк Точка</div>
+                <div class="card-title">РКО для ИП и ООО</div>
+              </div>
+            </div>
+            <span class="offer-badge">Для Бизнеса</span>
+            <div class="card-val">0 ₽/мес</div>
+            <ul style="list-style: none; font-size: 0.85rem; color: var(--color-text-muted); margin: 1rem 0; line-height: 1.6;">
+              <li>• Открытие счета за 20 минут онлайн</li>
+              <li>• Бесплатная бухгалтерия на УСН</li>
+              <li>• Эквайринг от 0.4%</li>
+            </ul>
+          </div>
+          <div class="card-actions">
+            <a href="https://tochka.com" target="_blank" rel="noopener" class="btn-primary" data-analytics-event="apply_tochka_rko">Открыть счёт</a>
+            <button class="btn-ghost open-modal-btn" data-title="Точка РКО" data-desc="Счет для бизнеса с поддержкой 24/7 в чате без бюрократии.">Условия</button>
           </div>
         </article>
       </div>
