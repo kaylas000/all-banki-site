@@ -35,7 +35,7 @@
   </header>
 
   <main class="main-wrap">
-    <!-- Hero Секция с телеметрией -->
+    <!-- Hero Секция с телеметрией и видео -->
     <section class="hero-sec" id="console">
       <div class="hero-cap">
         <span>НАРЯД № FIN-2026-01</span> · <span>ОФИЦИАЛЬНЫЙ РЕЕСТР СТАВОК</span>
@@ -44,6 +44,28 @@
       <p class="hero-lede">
         Честный расчет процентных ставок и кэшбэка без скрытых комиссий. Онлайн-одобрение заявки за 2 минуты без визита в банк.
       </p>
+
+      <!-- Видеопрезентация финансового портала -->
+      <div class="hero-video-wrapper">
+        <video 
+          class="hero-video-element" 
+          src="hero-video.mp4" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          poster="assets/img/hero-poster.png">
+        </video>
+        <div class="hero-video-overlay">
+          <div class="hero-video-hud">
+            <span>● REC FINANCIAL MONITOR 2026</span>
+            <span>HD VIDEO STREAM</span>
+          </div>
+          <div style="font-family:'Unbounded', sans-serif; font-size:1.1rem; color:var(--color-text-bright); text-shadow:0 2px 8px rgba(0,0,0,0.9);">
+            Умная финансовая консоль сравнения ставок
+          </div>
+        </div>
+      </div>
 
       <!-- Панель Телеметрии Ставок -->
       <div class="telemetry-grid">
@@ -75,7 +97,7 @@
       </div>
     </section>
 
-    <!-- Интерактивный Калькулятор Выгоды с идеальной симметрией -->
+    <!-- Интерактивный Калькулятор Выгоды -->
     <section class="calc-box" id="calculator">
       <h2 class="calc-header">Калькулятор выгоды и ежемесячного платежа</h2>
       <p style="color: var(--color-text-muted); font-size: 0.95rem;">Укажите сумму и срок — калькулятор высчитает аннуитетный платеж и вероятность одобрения</p>
