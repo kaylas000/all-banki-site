@@ -127,7 +127,7 @@
     text-transform: uppercase;
     cursor: pointer;
     min-height: 40px;
-    transition: all 0.2s var(--cb-brake);
+    transition: opacity 0.2s var(--cb-brake), transform 0.2s var(--cb-brake), background-color 0.2s var(--cb-brake), color 0.2s var(--cb-brake);
 
     &:hover {
       background: var(--color-gold);
@@ -147,7 +147,7 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    backdrop-filter: blur(12px);
+    
   }
 
   .brand-title {
@@ -336,7 +336,7 @@
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s var(--cb-brake);
+    transition: opacity 0.2s var(--cb-brake), transform 0.2s var(--cb-brake), background-color 0.2s var(--cb-brake), color 0.2s var(--cb-brake);
 
     &:hover, &.active {
       background: var(--color-gold);
@@ -467,7 +467,7 @@
     border: 1px solid var(--color-border);
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s var(--cb-brake);
 
     &:hover {
       background: var(--color-border);
@@ -479,7 +479,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
+    
     z-index: 1000;
     display: grid;
     place-items: center;
