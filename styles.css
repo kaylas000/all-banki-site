@@ -39,6 +39,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   html {
@@ -52,6 +54,7 @@
   body {
     min-height: 100vh;
     overflow-x: hidden;
+    width: 100%;
   }
 }
 
@@ -63,9 +66,11 @@
 
   .main-wrap {
     max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
     padding-left: max(1rem, var(--safe-left));
     padding-right: max(1rem, var(--safe-right));
+    box-sizing: border-box;
   }
 }
 
@@ -80,7 +85,7 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* 🎬 КИНОЗАСТАВКА МАТРИЦА (СРАЗУ ПРИ ЗАГРУЗКЕ, БЕЗ ЧЕРНОГО ЭКРАНА И ШТОР) */
+  /* 🎬 КИНОЗАСТАВКА МАТРИЦА */
   .intro-overlay {
     position: fixed;
     inset: 0;
@@ -105,37 +110,6 @@
     z-index: 10;
   }
 
-  .intro-hud-top {
-    position: absolute;
-    top: max(1rem, var(--safe-top));
-    left: max(1rem, var(--safe-left));
-    right: max(1rem, var(--safe-right));
-    z-index: 20;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .intro-skip-btn {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-bright);
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    cursor: pointer;
-    min-height: 40px;
-    transition: opacity 0.2s var(--cb-brake), transform 0.2s var(--cb-brake), background-color 0.2s var(--cb-brake), color 0.2s var(--cb-brake);
-
-    &:hover {
-      background: var(--color-gold);
-      color: var(--color-bg-dark);
-      font-weight: 700;
-    }
-  }
-
   /* Шапка сайта */
   .hud-header {
     display: flex;
@@ -147,7 +121,8 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .brand-title {
@@ -188,73 +163,192 @@
     box-shadow: 0 0 10px var(--color-green);
   }
 
-  /* Hero Секция */
-  .hero-sec {
-    padding: clamp(2rem, 5vw, 3.5rem) 0 2rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .hero-cap {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: var(--color-gold);
-    letter-spacing: 0.18em;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
   .mega-title {
     font-family: 'Russo One', sans-serif;
-    font-size: clamp(2.2rem, 8.5vw, 5.5rem);
-    line-height: 0.95;
+    font-size: clamp(1.6rem, 6vw, 3.8rem);
+    line-height: 1.1;
     text-transform: uppercase;
     color: var(--color-text-bright);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
+    overflow-wrap: break-word;
     word-break: break-word;
+    hyphens: auto;
+    max-width: 100%;
   }
 
-  .hero-lede {
-    font-size: clamp(1rem, 2.5vw, 1.15rem);
-    color: var(--color-text-muted);
-    max-width: 58ch;
-    margin-bottom: 2rem;
-  }
-
-  /* Панель Телеметрии */
-  .telemetry-grid {
+  /* Сетка карточек каталога — 100% Mobile Overflow Safe */
+  .catalog-grid, #catalogGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--color-border);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 2rem 0;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .telem-cell {
+  .offer-card, .card-item, .credit-card {
     background: var(--color-bg-card);
-    padding: clamp(0.85rem, 3vw, 1.25rem);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: clamp(1rem, 3.5vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    transition: transform 0.2s var(--cb-brake), border-color 0.2s var(--cb-brake);
 
-    & b {
-      display: block;
-      font-family: 'Unbounded', sans-serif;
-      font-size: clamp(1.2rem, 3.5vw, 1.6rem);
-      color: var(--color-gold);
-      line-height: 1.1;
+    &:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-gold);
+    }
+  }
+
+  .offer-card-header, .card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+  }
+
+  .offer-bank-logo, .card-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .card-title, .offer-card-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: var(--color-text-bright);
+    line-height: 1.25;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+  }
+
+  .card-bank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--color-gold);
+    text-transform: uppercase;
+  }
+
+  .offer-badge {
+    display: inline-block;
+    padding: 0.2rem 0.45rem;
+    background: color-mix(in oklch, var(--color-gold) 20%, transparent);
+    color: var(--color-gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .offer-params-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 0.85rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .offer-param-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+
+    & .label {
+      color: var(--color-text-muted);
+      overflow-wrap: break-word;
+      max-width: 60%;
     }
 
-    & span {
-      display: block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(0.65rem, 1.8vw, 0.75rem);
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-top: 0.25rem;
+    & .value {
+      font-weight: 700;
+      color: #fff;
+      overflow-wrap: break-word;
+      text-align: right;
+    }
+  }
+
+  .offer-card-footer, .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    width: 100%;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-min);
+    padding: 0.75rem 1rem;
+    background: var(--color-gold);
+    color: var(--color-bg-dark);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: transform 0.15s var(--cb-brake), background-color 0.15s var(--cb-brake);
+
+    &:hover {
+      background: oklch(0.85 0.24 85);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-min);
+    padding: 0.5rem 0.85rem;
+    background: transparent;
+    color: var(--color-text-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s var(--cb-brake);
+
+    &:hover {
+      background: var(--color-border);
     }
   }
 
@@ -263,64 +357,15 @@
     background: var(--color-bg-card);
     border: 2px solid var(--color-border);
     border-radius: 12px;
-    padding: clamp(1.25rem, 4vw, 2.25rem);
-    margin: 2.5rem 0;
+    padding: clamp(1rem, 3.5vw, 2rem);
+    margin: 2rem 0;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  }
-
-  .calc-header {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-
-  .calc-inputs-grid {
-    margin-top: 1.5rem;
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .calc-range {
     width: 100%;
-    margin: 0.75rem 0;
-    accent-color: var(--color-gold);
-    cursor: pointer;
-    min-height: 36px;
-  }
-
-  .calc-result-bar {
-    margin-top: 1.5rem;
-    padding: clamp(1rem, 3vw, 1.25rem);
-    background: var(--color-bg-dark);
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    border: 1px solid var(--color-border);
-  }
-
-  .calc-result-val {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(1.5rem, 5vw, 2.2rem);
-    color: var(--color-gold);
-    font-weight: 700;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   /* Табы Категорий */
-  .category-nav {
-    display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    padding: 0.25rem 0 0.75rem;
-    margin: 1.5rem 0;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-  }
-
   .tab-btn {
     display: inline-flex;
     align-items: center;
@@ -346,140 +391,11 @@
     }
   }
 
-  /* Карточки Предложений */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.25rem;
-  }
-
-  .card-item {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: clamp(1.1rem, 3.5vw, 1.5rem);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.2s var(--cb-brake), border-color 0.2s var(--cb-brake);
-
-    &:hover {
-      transform: translateY(-4px);
-      border-color: var(--color-gold);
-    }
-  }
-
-  .card-head {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    margin-bottom: 1rem;
-  }
-
-  .card-logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    background: #ffffff;
-    padding: 4px;
-    object-fit: contain;
-    flex-shrink: 0;
-  }
-
-  .card-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 1.05rem;
-    color: var(--color-text-bright);
-    line-height: 1.2;
-  }
-
-  .card-bank {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--color-gold);
-    text-transform: uppercase;
-  }
-
-  .offer-badge {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    background: color-mix(in oklch, var(--color-gold) 20%, transparent);
-    color: var(--color-gold);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    border-radius: 4px;
-    text-transform: uppercase;
-  }
-
-  .card-val {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 1.65rem;
-    font-weight: 700;
-    color: var(--color-gold);
-    margin: 0.5rem 0;
-  }
-
-  .card-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--touch-target-min);
-    padding: 0.75rem 1.25rem;
-    background: var(--color-gold);
-    color: var(--color-bg-dark);
-    font-family: 'Unbounded', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: transform 0.15s var(--cb-brake), background-color 0.15s var(--cb-brake);
-
-    &:hover {
-      background: oklch(0.85 0.24 85);
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
-  }
-
-  .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--touch-target-min);
-    padding: 0.5rem 1rem;
-    background: transparent;
-    color: var(--color-text-bright);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s var(--cb-brake);
-
-    &:hover {
-      background: var(--color-border);
-    }
-  }
-
   /* Модальное окно */
   .modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.85);
-    
     z-index: 1000;
     display: grid;
     place-items: center;
@@ -502,12 +418,14 @@
     max-width: 560px;
     width: 100%;
     position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .modal-close {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 0.75rem;
+    right: 0.75rem;
     background: transparent;
     border: none;
     color: var(--color-text-muted);
@@ -518,48 +436,45 @@
   }
 }
 
-/* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ (320px - 768px) */
+/* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ (320px - 768px) — 100% OVERFLOW SAFE */
 @media (max-width: 768px) {
   .hud-status {
     display: none;
   }
 
-  .calc-inputs-grid {
-    grid-template-columns: 1fr;
+  .catalog-grid, #catalogGrid {
+    grid-template-columns: 1fr !important;
     gap: 1rem;
   }
 
-  .calc-result-bar {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+  .offer-card, .card-item, .credit-card {
+    padding: 1rem !important;
   }
 
-  .calc-result-bar .btn-primary {
-    width: 100%;
+  .offer-card-footer, .card-actions {
+    flex-direction: column !important;
   }
 
-  .card-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card-actions {
-    flex-direction: column;
-  }
-
+  .offer-card-footer .btn-primary,
+  .offer-card-footer .btn-ghost,
   .card-actions .btn-primary,
   .card-actions .btn-ghost {
-    width: 100%;
+    width: 100% !important;
+  }
+
+  .offer-param-row .label {
+    max-width: 50% !important;
   }
 }
 
 @media (max-width: 480px) {
-  .telemetry-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .main-wrap {
+    padding-left: max(0.75rem, var(--safe-left));
+    padding-right: max(0.75rem, var(--safe-right));
   }
 
   .calc-box {
-    padding: 1rem;
+    padding: 0.85rem !important;
   }
 }
 
