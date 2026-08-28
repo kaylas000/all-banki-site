@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Бот-писатель финансовых витрин (Programmatic AI Generator):
+Бот-писатель финансовых витрин (Programmatic AI Generator v2.1):
 Генерирует уникальные посадочные микространицы под НЧ-запросы.
 Каждая страница включает:
 1. Матричную видео-заставку SK-17 с текстом в столбик, ТЕТ-А-ТЕТ СООТВЕТСТВУЮЩИМ КЛЮЧЕВОЙ ФРАЗЕ.
 2. ПОЛНЫЙ КАТАЛОГ ОФФЕРОВ (25+ МФО / 20+ Кредитов / 11+ Карт) прямо на странице с фильтрацией и калькулятором.
-3. Экспертный SEO-текст со структурированными заголовками H2/H3, списками и FAQ.
-4. Schema.org микроразметку и 100% чистый код без BANNED слопа.
+3. Иконки строго 44x44 / 48x48px (без выпадений и искажений).
+4. Экспертный SEO-текст со структурированными заголовками H2/H3, списками и FAQ.
+5. Schema.org микроразметку и 100% чистый код без BANNED слопа.
 """
 
 import os
@@ -114,8 +115,8 @@ def build_full_offers_grid(cat):
             cards_html.append(f"""
     <article class="offer-card card-item" data-category="{ 'perviy' if is_zero else 'srochno' }" data-name="{bank} {product}">
       <div class="offer-card-header">
-        <div class="offer-bank-logo">
-          <img src="assets/img/{logo}" alt="{bank}">
+        <div class="offer-bank-logo" style="width:48px; height:48px; min-width:48px; min-height:48px; border-radius:8px; overflow:hidden; background:rgba(255,255,255,0.05); padding:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <img src="assets/img/{logo}" alt="{bank}" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;">
         </div>
         <div>
           <div class="card-bank">{bank}</div>
@@ -175,8 +176,8 @@ def build_full_offers_grid(cat):
             cards_html.append(f"""
     <article class="offer-card card-item" data-category="nalichnye" data-name="{bank} {product}">
       <div class="offer-card-header">
-        <div class="offer-bank-logo">
-          <img src="assets/img/{logo}" alt="{bank}">
+        <div class="offer-bank-logo" style="width:48px; height:48px; min-width:48px; min-height:48px; border-radius:8px; overflow:hidden; background:rgba(255,255,255,0.05); padding:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <img src="assets/img/{logo}" alt="{bank}" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;">
         </div>
         <div>
           <div class="card-bank">{bank}</div>
@@ -229,8 +230,8 @@ def build_full_offers_grid(cat):
             cards_html.append(f"""
     <article class="offer-card card-item" data-category="debet" data-name="{bank} {product}">
       <div class="offer-card-header">
-        <div class="offer-bank-logo">
-          <img src="assets/img/{logo}" alt="{bank}">
+        <div class="offer-bank-logo" style="width:48px; height:48px; min-width:48px; min-height:48px; border-radius:8px; overflow:hidden; background:rgba(255,255,255,0.05); padding:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <img src="assets/img/{logo}" alt="{bank}" style="width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; display:block;">
         </div>
         <div>
           <div class="card-bank">{bank}</div>
@@ -457,16 +458,16 @@ def generate_full_html_page(topic):
 </html>"""
 
 def main():
-    print("AI Financial Generator v2.0 initialized...")
+    print("AI Financial Generator v2.1 initialized (Strict Logo 48x48 Overflow Safe)...")
     site_dir = "/home/user/all-banki-site"
     
-    print(f"Generating {len(FINANCIAL_TOPICS)} full programmatic pages with FULL OFFERS CATALOG & MATCHING INTRO TEXT...")
+    print(f"Generating {len(FINANCIAL_TOPICS)} full programmatic pages...")
     for t in FINANCIAL_TOPICS:
         html_content = generate_full_html_page(t)
         file_path = os.path.join(site_dir, f"{t['slug']}.html")
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(html_content)
-        print(f"Generated full page with offers grid & SEO text: {t['title']} ({t['slug']}.html)")
+        print(f"Generated page: {t['title']} ({t['slug']}.html)")
 
 if __name__ == "__main__":
     main()

@@ -216,14 +216,34 @@
     box-sizing: border-box;
   }
 
-  .offer-bank-logo, .card-logo {
-    width: 44px;
-    height: 44px;
+  /* ЛОГОТИПЫ БАНКОВ И МФО — СТРОГО 48x48px (БЕЗ ВЫПАДЕНИЯ И ИСКАЖЕНИЯ) */
+  .offer-bank-logo, .card-logo, .brand-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.05);
     padding: 4px;
-    object-fit: contain;
-    flex-shrink: 0;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    position: relative;
+  }
+
+  .offer-bank-logo img, .card-logo img, .brand-icon img,
+  .offer-bank-logo svg, .card-logo svg, .brand-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    display: block !important;
   }
 
   .card-title, .offer-card-title {
@@ -449,6 +469,15 @@
 
   .offer-card, .card-item, .credit-card {
     padding: 1rem !important;
+  }
+
+  .offer-bank-logo, .card-logo, .brand-icon {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
   }
 
   .offer-card-footer, .card-actions {
