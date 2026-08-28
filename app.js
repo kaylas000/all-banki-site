@@ -1,46 +1,54 @@
-/* ------------------------------------------------------------------ */
-/* Все Банки — SOTA 2026 Interactive Vertical Matrix Web-Video Engine  */
-/* ------------------------------------------------------------------ */
+/* Bank Matrix Video Engine — SOTA 2026 Code-Video (SK-16 / SK-17 / M-12) */
 
-// 🎬 ИНТЕРАКТИВНАЯ ВЕРТИКАЛЬНАЯ ЦИФРОВАЯ МАТРИЦА С ТЕКСТОМ В СТОЛБИК
 class BankMatrixVideoEngine {
   constructor(canvas, onDone) {
     this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas ? canvas.getContext("2d") : null;
     this.onDone = onDone;
     this.frame = 0;
-    this.totalFrames = 240; // 4.0 секунды при 60 FPS
+    this.totalFrames = 210; // ~3.5s @ 60fps
     this.fps = 60;
     this.isPlaying = true;
     this.fontSize = 16;
     this.columns = [];
     this.matrixChars = "0123456789%₽$ABCDEF18.01%365ДНЕЙКЭШБЭК";
 
-    // Сценарий текста в столбик (3 строки без "И"):
-    // ВИТРИНА
-    // КРЕДИТОВ
-    // ЗАЙМОВ
-    this.columnText = ["ВИТРИНА", "КРЕДИТОВ", "ЗАЙМОВ"];
+    // Text reveal lines (dynamic per page or custom data-text)
+    if (canvas && canvas.dataset && canvas.dataset.text) {
+      this.columnText = canvas.dataset.text.split("|");
+    } else if (typeof window !== "undefined" && (window.location.pathname.includes("mfo") || window.location.pathname.includes("zaym"))) {
+      this.columnText = ["ЗАЙМЫ", "ОТ 0%", "ОНЛАЙН", "НА КАРТУ"];
+    } else {
+      this.columnText = ["ВИТРИНА", "КРЕДИТОВ", "ЗАЙМОВ"];
+    }
 
     this.init();
   }
 
   init() {
+    if (!this.canvas) return;
     this.resize();
     window.addEventListener("resize", () => this.resize());
+
+    // Check prefers-reduced-motion
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      this.totalFrames = 10; // instant reveal for accessibility
+    }
   }
 
   resize() {
     if (!this.canvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const rect = this.canvas.getBoundingClientRect();
+    const container = this.canvas.parentElement || document.body;
+    const rect = container.getBoundingClientRect();
     const w = rect.width || window.innerWidth;
     const h = rect.height || window.innerHeight;
 
     this.canvas.width = Math.round(w * dpr);
     this.canvas.height = Math.round(h * dpr);
 
-    const colCount = Math.floor(this.canvas.width / (this.fontSize * dpr));
+    const fontPx = Math.round(14 * dpr);
+    const colCount = Math.floor(this.canvas.width / fontPx) || 20;
     this.columns = Array.from({ length: colCount }, () => ({
       y: Math.random() * -this.canvas.height,
       speed: (3 + Math.random() * 6) * dpr,
@@ -49,22 +57,22 @@ class BankMatrixVideoEngine {
   }
 
   start() {
+    if (!this.canvas || !this.ctx) {
+      this.finish();
+      return;
+    }
     this.loop();
   }
 
   loop = () => {
     if (!this.isPlaying) return;
-
     const p = this.frame / this.totalFrames;
     this.renderMatrixFrame(p);
-
     this.frame++;
-
     if (this.frame >= this.totalFrames) {
       this.finish();
       return;
     }
-
     requestAnimationFrame(this.loop);
   };
 
@@ -74,106 +82,72 @@ class BankMatrixVideoEngine {
 
     const w = this.canvas.width;
     const h = this.canvas.height;
-    const f = this.frame;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    // 1. Тёмный фон с легким размытием шлейфа (Matrix Rain Trail)
-    ctx.fillStyle = "rgba(12, 11, 8, 0.25)";
+    ctx.fillStyle = "rgba(12, 11, 8, 0.22)";
     ctx.fillRect(0, 0, w, h);
 
-    // 2. РЕНДЕР ВЕРТИКАЛЬНОЙ ЦИФРОВОЙ МАТРИЦЫ (Matrix Code Rain)
     const fontPx = Math.round(14 * dpr);
     ctx.font = `700 ${fontPx}px 'JetBrains Mono', monospace`;
 
     this.columns.forEach((col, i) => {
       const x = i * fontPx;
       col.y += col.speed;
-
       if (col.y > h + 100) {
         col.y = -Math.random() * 200;
         col.speed = (3 + Math.random() * 6) * dpr;
       }
-
-      // Отрисовка цепочки падающих цифр и символов
       col.chars.forEach((char, charIdx) => {
         const charY = col.y - charIdx * (fontPx + 2);
         if (charY > 0 && charY < h) {
-          if (charIdx === 0) {
-            ctx.fillStyle = "#ffffff";
-          } else if (charIdx < 4) {
-            ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
-          } else {
-            ctx.fillStyle = "rgba(46, 125, 79, 0.4)";
-          }
-
-          const displayChar = (Math.random() < 0.05) 
-            ? this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)] 
-            : char;
-
+          ctx.fillStyle = charIdx === 0 ? "#ffffff" : charIdx < 4 ? "rgba(224, 169, 28, 0.9)" : "rgba(46, 125, 79, 0.35)";
+          const displayChar = (Math.random() < 0.05) ? this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)] : char;
           ctx.fillText(displayChar, x, charY);
         }
       });
     });
 
-    // 3. РЕНДЕР МАССИВНОГО ГИГАНТСКОГО ТЕКСТА В СТОЛБИК ДЛЯ МОБИЛЬНЫХ:
-    //    ВИТРИНА
-    //    КРЕДИТОВ
-    //    ЗАЙМОВ
-    const textProgress = Math.min(1, Math.max(0, (p - 0.1) / 0.8));
+    const textProgress = Math.min(1, Math.max(0, (p - 0.05) / 0.85));
     const lineStep = 1 / this.columnText.length;
-
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // РАДИКАЛЬНО УВЕЛИЧЕННЫЙ ШРИФТ ДЛЯ МОБИЛЬНЫХ
-    const titleFontSize = Math.max(52 * dpr, Math.round(w * 0.125));
-    const startY = h * 0.22;
-    const lineHeight = titleFontSize * 1.3;
+    // Mobile DPR text scaling: large, bold, crisp on 320px..4K
+    const titleFontSize = Math.max(44 * dpr, Math.round(w * 0.11));
+    const startY = h * 0.2;
+    const lineHeight = titleFontSize * 1.25;
 
     this.columnText.forEach((word, lineIdx) => {
       const lineProgress = Math.min(1, Math.max(0, (textProgress - lineIdx * lineStep) / lineStep));
-
       if (lineProgress > 0) {
         const lineY = startY + lineIdx * lineHeight;
-
-        // Эффект скрэмбл-декодирования символов
         const settledCount = Math.floor(lineProgress * word.length * 1.2);
         let displayWord = "";
         for (let c = 0; c < word.length; c++) {
-          if (c < settledCount) {
-            displayWord += word[c];
-          } else {
-            displayWord += this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
-          }
+          displayWord += c < settledCount ? word[c] : this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
         }
 
         ctx.save();
         ctx.translate(w / 2, lineY);
-
         ctx.globalAlpha = Math.min(1, lineProgress * 2);
-
         ctx.shadowColor = "#e0a91c";
         ctx.shadowBlur = 32 * lineProgress * dpr;
-
         ctx.font = `900 ${titleFontSize}px 'Russo One', sans-serif`;
         ctx.fillStyle = "#e0a91c";
         ctx.fillText(displayWord, 0, 0);
-
         ctx.restore();
       }
     });
   }
 
-  skip() {
-    this.finish();
-  }
-
   finish() {
     this.isPlaying = false;
-    sessionStorage.setItem("allbanki-intro-seen", "1");
     const overlay = document.getElementById("introOverlay");
     if (overlay) {
       overlay.classList.add("is-done");
+      overlay.style.transition = "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+      overlay.style.opacity = "0";
+      overlay.style.pointerEvents = "none";
       setTimeout(() => {
         overlay.style.display = "none";
       }, 600);
@@ -186,7 +160,7 @@ class BankMatrixVideoEngine {
 class BankCodeVideoEngine {
   constructor(canvas) {
     this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas ? canvas.getContext("2d") : null;
     this.frame = 0;
     this.fps = 60;
     this.particles = [];
@@ -194,6 +168,7 @@ class BankCodeVideoEngine {
   }
 
   init() {
+    if (!this.canvas) return;
     const w = this.canvas.width;
     const h = this.canvas.height;
     this.particles = Array.from({ length: 300 }, () => ({
@@ -250,159 +225,101 @@ class BankCodeVideoEngine {
       ctx.fill();
     });
 
-    // Telemetry Text
-    ctx.font = "700 11px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "rgba(224, 169, 28, 0.9)";
-    ctx.fillText(`CODE-VIDEO FRAME #${String(this.frame).padStart(4, "0")} · 60 FPS`, 16, 24);
-    ctx.fillText(`TIME VIRTUALIZATION ENGINE (SK-16)`, 16, 40);
-
     this.frame++;
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. Запуск Интерактивной Вертикальной Цифровой Матрицы с текстом в столбик
-  const introCanvas = document.getElementById("introCanvas");
-  const replayIntroBtn = document.getElementById("replayIntroBtn");
+// Auto-initialize on page load
+if (typeof window !== "undefined") {
+  const initEngine = () => {
+    const canvas = document.getElementById("introCanvas");
+    const overlay = document.getElementById("introOverlay");
+    
+    if (canvas && overlay) {
+      const engine = new BankMatrixVideoEngine(canvas);
+      engine.start();
 
-  if (introCanvas) {
-    const introEngine = new BankMatrixVideoEngine(introCanvas, () => {
-      console.log("[SK-06 / Matrix Video] Заставка с текстом в столбик завершена, сайт открыт.");
-    });
-
-    introEngine.start();
-
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") introEngine.skip();
-    });
-
-    if (replayIntroBtn) {
-      replayIntroBtn.addEventListener("click", () => {
-        sessionStorage.removeItem("allbanki-intro-seen");
-        const overlay = document.getElementById("introOverlay");
-        if (overlay) {
-          overlay.style.display = "flex";
-          overlay.classList.remove("is-done");
-          const reEngine = new BankMatrixVideoEngine(introCanvas, () => {});
-          reEngine.start();
-        }
+      const dismiss = () => engine.finish();
+      overlay.addEventListener("click", dismiss);
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") dismiss();
       });
+
+      // Safety timeout: dismiss after 3.8s max
+      setTimeout(() => {
+        if (engine.isPlaying) engine.finish();
+      }, 3800);
+    } else if (overlay) {
+      overlay.style.display = "none";
     }
-  }
 
-  // 2. Табы фильтрации
-  const tabBtns = document.querySelectorAll(".tab-btn");
-  const cardItems = document.querySelectorAll(".card-item");
-
-  tabBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      tabBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      const cat = btn.getAttribute("data-cat");
-
-      cardItems.forEach((card) => {
-        const cardCat = card.getAttribute("data-category");
-        if (cat === "all" || cardCat === cat) {
-          card.style.display = "flex";
-        } else {
-          card.style.display = "none";
-        }
-      });
-    });
-  });
-
-  // 3. Интерактивный калькулятор
-  const amountRange = document.getElementById("amountRange");
-  const monthsRange = document.getElementById("monthsRange");
-  const amountVal = document.getElementById("amountVal");
-  const monthsVal = document.getElementById("monthsVal");
-  const calcResult = document.getElementById("calcResult");
-
-  function updateCalc() {
-    if (!amountRange || !monthsRange || !calcResult) return;
-
-    const amount = parseInt(amountRange.value, 10);
-    const months = parseInt(monthsRange.value, 10);
-
-    amountVal.textContent = amount.toLocaleString("ru-RU") + " ₽";
-    monthsVal.textContent = months + " мес";
-
-    const monthlyRate = 0.185 / 12;
-    const payment = Math.round((amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months)));
-
-    calcResult.textContent = payment.toLocaleString("ru-RU") + " ₽/мес";
-  }
-
-  if (amountRange && monthsRange) {
-    amountRange.addEventListener("input", updateCalc);
-    monthsRange.addEventListener("input", updateCalc);
-    updateCalc();
-  }
-
-  // 4. Модальное окно
-  const modalOverlay = document.getElementById("modalOverlay");
-  const modalClose = document.getElementById("modalClose");
-  const modalOkBtn = document.getElementById("modalOkBtn");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalDesc = document.getElementById("modalDesc");
-  const openModalBtns = document.querySelectorAll(".open-modal-btn");
-
-  function closeModal() {
-    if (modalOverlay) {
-      modalOverlay.classList.remove("active");
-      modalOverlay.setAttribute("aria-hidden", "true");
+    // Rate Canvas
+    const rateCanvas = document.getElementById("rateCanvas");
+    if (rateCanvas) {
+      const videoEngine = new BankCodeVideoEngine(rateCanvas);
+      const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function loop() {
+        videoEngine.renderFrame();
+        if (!isReduced) requestAnimationFrame(loop);
+      }
+      loop();
     }
-  }
 
-  openModalBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const title = btn.getAttribute("data-title") || "Условия продукта";
-      const desc = btn.getAttribute("data-desc") || "Информация о продукте.";
+    // Modals
+    const modalOverlay = document.getElementById("modalOverlay");
+    const modalClose = document.getElementById("modalClose");
+    const modalOkBtn = document.getElementById("modalOkBtn");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDesc = document.getElementById("modalDesc");
+    const openModalBtns = document.querySelectorAll(".open-modal-btn");
 
-      if (modalTitle) modalTitle.textContent = title;
-      if (modalDesc) modalDesc.textContent = desc;
-
+    function closeModal() {
       if (modalOverlay) {
-        modalOverlay.classList.add("active");
-        modalOverlay.setAttribute("aria-hidden", "false");
-      }
-    });
-  });
-
-  if (modalClose) modalClose.addEventListener("click", closeModal);
-  if (modalOkBtn) modalOkBtn.addEventListener("click", closeModal);
-  if (modalOverlay) {
-    modalOverlay.addEventListener("click", (e) => {
-      if (e.target === modalOverlay) closeModal();
-    });
-  }
-
-  // 5. Запуск Code-Video Rate Engine
-  const canvas = document.getElementById("rateCanvas");
-  if (canvas) {
-    const videoEngine = new BankCodeVideoEngine(canvas);
-    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    function loop() {
-      videoEngine.renderFrame();
-      if (!isReduced) {
-        requestAnimationFrame(loop);
+        modalOverlay.classList.remove("active");
+        modalOverlay.setAttribute("aria-hidden", "true");
       }
     }
 
-    loop();
-  }
+    openModalBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const title = btn.getAttribute("data-title") || "Условия продукта";
+        const desc = btn.getAttribute("data-desc") || "Информация о продукте.";
 
-  // 6. MultiLanding
-  const params = new URLSearchParams(window.location.search);
-  const term = params.get("utm_term");
-  if (term) {
-    const decoded = decodeURIComponent(term).replace(/-/g, " ");
-    const capitalized = decoded.charAt(0).toUpperCase() + decoded.slice(1);
-    const titleEl = document.querySelector(".mega-title");
-    if (titleEl) {
-      titleEl.textContent = capitalized;
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalDesc) modalDesc.textContent = desc;
+
+        if (modalOverlay) {
+          modalOverlay.classList.add("active");
+          modalOverlay.setAttribute("aria-hidden", "false");
+        }
+      });
+    });
+
+    if (modalClose) modalClose.addEventListener("click", closeModal);
+    if (modalOkBtn) modalOkBtn.addEventListener("click", closeModal);
+    if (modalOverlay) {
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
     }
+
+    // Replay button
+    const replayIntroBtn = document.getElementById("replayIntroBtn");
+    if (replayIntroBtn && canvas && overlay) {
+      replayIntroBtn.addEventListener("click", () => {
+        overlay.style.display = "flex";
+        overlay.style.opacity = "1";
+        overlay.style.pointerEvents = "auto";
+        overlay.classList.remove("is-done");
+        const reEngine = new BankMatrixVideoEngine(canvas);
+        reEngine.start();
+      });
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initEngine);
+  } else {
+    initEngine();
   }
-});
+}
