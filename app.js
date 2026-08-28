@@ -13,9 +13,11 @@ class BankMatrixVideoEngine {
     this.columns = [];
     this.matrixChars = "0123456789%₽$ABCDEF18.01%365ДНЕЙКЭШБЭК";
 
-    // Text reveal lines (dynamic per page or custom data-text)
+    // Dynamic text reveal per page
     if (canvas && canvas.dataset && canvas.dataset.text) {
       this.columnText = canvas.dataset.text.split("|");
+    } else if (typeof window !== "undefined" && window.location.pathname.includes("kredity")) {
+      this.columnText = ["КРЕДИТЫ", "НАЛИЧНЫМИ", "ОНЛАЙН", "В БАНКАХ"];
     } else if (typeof window !== "undefined" && (window.location.pathname.includes("mfo") || window.location.pathname.includes("zaym"))) {
       this.columnText = ["ЗАЙМЫ", "ОТ 0%", "ОНЛАЙН", "НА КАРТУ"];
     } else {
@@ -263,6 +265,68 @@ if (typeof window !== "undefined") {
         if (!isReduced) requestAnimationFrame(loop);
       }
       loop();
+    }
+
+    // Filter pills & search & sorting
+    const pills = document.querySelectorAll(".filter-pill");
+    const cards = document.querySelectorAll(".card-item");
+    const searchInput = document.getElementById("searchInput");
+
+    function filterCards() {
+      const search = (searchInput ? searchInput.value : "").toLowerCase();
+      const activePill = document.querySelector(".filter-pill.active");
+      const activeCat = activePill ? activePill.dataset.category : "all";
+
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        const name = (card.dataset.name || "").toLowerCase();
+        const matchCat = activeCat === "all" || cat === activeCat;
+        const matchSearch = !search || name.includes(search);
+        card.style.display = (matchCat && matchSearch) ? "flex" : "none";
+      });
+    }
+
+    pills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        pills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        filterCards();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener("input", filterCards);
+    }
+
+    // Calculator Range Listeners
+    const amountRange = document.getElementById("amountRange");
+    const monthsRange = document.getElementById("monthsRange");
+    const amountVal = document.getElementById("amountVal");
+    const monthsVal = document.getElementById("monthsVal");
+    const calcResult = document.getElementById("calcResult");
+
+    function updateCalc() {
+      if (!amountRange || !monthsRange || !calcResult) return;
+      const amount = parseInt(amountRange.value, 10);
+      const months = parseInt(monthsRange.value, 10);
+
+      if (amountVal) amountVal.textContent = amount.toLocaleString("ru-RU") + " ₽";
+      if (monthsVal) monthsVal.textContent = months + " " + (months <= 30 && (window.location.pathname.includes("mfo") || window.location.pathname.includes("zaym")) ? "дней" : "мес");
+
+      const isMfo = window.location.pathname.includes("mfo") || window.location.pathname.includes("zaym");
+      if (isMfo) {
+        calcResult.textContent = amount.toLocaleString("ru-RU") + " ₽";
+      } else {
+        const monthlyRate = 0.185 / 12;
+        const payment = Math.round((amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months)));
+        calcResult.textContent = payment.toLocaleString("ru-RU") + " ₽/мес";
+      }
+    }
+
+    if (amountRange && monthsRange) {
+      amountRange.addEventListener("input", updateCalc);
+      monthsRange.addEventListener("input", updateCalc);
+      updateCalc();
     }
 
     // Modals
