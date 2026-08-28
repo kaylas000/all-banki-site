@@ -1,87 +1,20 @@
-#!/usr/bin/env python3
-"""
-Бот-писатель финансовых витрин: генерирует микространицы и предложения
-интегрирован с пакетом инфраструктуры kaylas000 (Cloudflare / Grok / GitHub Actions)
-"""
-
-import os
-import sys
-import json
-import requests
-from datetime import datetime
-
-FINANCIAL_TOPICS = [
-    {
-        "slug": "zaym-bez-otkaza-online",
-        "title": "Займы без отказа онлайн на карту 24/7",
-        "cat": "mfo",
-        "intro_text": "Сравните предложения от МФО с мгновенной выдачей микрозаймов без отказа. Перевод средств на любую банковскую карту РФ по СБП за 2 минуты.",
-        "badge": "0% ПЕРВЫЙ ЗАЙМ",
-        "rate": "от 0%",
-        "limit": "до 100 000 ₽",
-        "speed": "2 минуты"
-    },
-    {
-        "slug": "kredit-nalichnymi-bez-spravok",
-        "title": "Кредиты наличными без справок о доходах",
-        "cat": "kredity",
-        "intro_text": "Потребительские кредиты наличными по паспорту без подтверждения доходов и поручителей. Быстрое решение онлайн.",
-        "badge": "БЕЗ СПРАВОК",
-        "rate": "от 4.9%",
-        "limit": "до 5 000 000 ₽",
-        "speed": "5 минут"
-    },
-    {
-        "slug": "karty-debetovye-s-kashbekom",
-        "title": "Дебетовые карты с повышенным кэшбэком",
-        "cat": "karty",
-        "intro_text": "Дебетовые банковские карты с бесплатным обслуживанием и высоким кэшбэком на популярные категории трат в рублях.",
-        "badge": "КЭШБЭК ДО 15%",
-        "rate": "0 ₽",
-        "limit": "до 15% кэшбэк",
-        "speed": "Доставка 1 день"
-    },
-    {
-        "slug": "vklady-s-kapitalizaciej",
-        "title": "Вклады с ежемесячной капитализацией",
-        "cat": "vklady",
-        "intro_text": "Выгодные вклады и накопительные счета в надежных банках с максимальной процентной ставкой и капитализацией.",
-        "badge": "ДО 18.01% ГОДОВЫХ",
-        "rate": "до 18.01%",
-        "limit": "от 10 000 ₽",
-        "speed": "Онлайн открытие"
-    }
-]
-
-def generate_html_page(topic):
-    title = topic["title"]
-    cat = topic["cat"]
-    intro = topic["intro_text"]
-    badge = topic["badge"]
-    rate = topic["rate"]
-    limit = topic["limit"]
-    speed = topic["speed"]
-    slug = topic["slug"]
-
-    matrix_text = "ЗАЙМЫ|ОТ 0%|ОНЛАЙН|НА КАРТУ" if cat == "mfo" else "КРЕДИТЫ|НАЛИЧНЫМИ|ОНЛАЙН|В БАНКАХ"
-
-    return f"""<!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{title} — Каталог 2026 | Все Банки</title>
-  <meta name="description" content="{intro}">
+  <title>Займы без отказа онлайн на карту 24/7 — Каталог 2026 | Все Банки</title>
+  <meta name="description" content="Сравните предложения от МФО с мгновенной выдачей микрозаймов без отказа. Перевод средств на любую банковскую карту РФ по СБП за 2 минуты.">
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Unbounded:wght@500;700;900&family=Jost:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <script type="application/ld+json">
-  {{
+  {
     "@context": "https://schema.org",
     "@type": "FinancialService",
-    "name": "{title}",
-    "description": "{intro}",
-    "url": "https://kaylas000.github.io/all-banki-site/{slug}.html"
-  }}
+    "name": "Займы без отказа онлайн на карту 24/7",
+    "description": "Сравните предложения от МФО с мгновенной выдачей микрозаймов без отказа. Перевод средств на любую банковскую карту РФ по СБП за 2 минуты.",
+    "url": "https://kaylas000.github.io/all-banki-site/zaym-bez-otkaza-online.html"
+  }
   </script>
 </head>
 <body class="container-ctx">
@@ -90,7 +23,7 @@ def generate_html_page(topic):
   <!-- 🎬 ВЕБ-ВИДЕО ЗАСТАВКА МАТРИЦА (SK-17) -->
   <div class="intro-overlay" id="introOverlay" role="presentation">
     <div class="intro-canvas-container">
-      <canvas id="introCanvas" width="1280" height="720" style="width:100%; height:100%; display:block;" data-text="{matrix_text}"></canvas>
+      <canvas id="introCanvas" width="1280" height="720" style="width:100%; height:100%; display:block;" data-text="ЗАЙМЫ|ОТ 0%|ОНЛАЙН|НА КАРТУ"></canvas>
     </div>
   </div>
 
@@ -110,33 +43,33 @@ def generate_html_page(topic):
     <nav style="font-size:0.85rem; color:var(--color-text-muted, #a0a0a0); margin-bottom:1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
       <a href="index.html" style="color:var(--color-gold, #e0a91c);" data-analytics-event="breadcrumb_home">Главная</a>
       <span>/</span>
-      <span>{title}</span>
+      <span>Займы без отказа онлайн на карту 24/7</span>
     </nav>
 
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem; flex-wrap:wrap;">
-      <span class="offer-badge" style="background:var(--color-gold, #e0a91c); color:#000; font-weight:700;">{badge}</span>
+      <span class="offer-badge" style="background:var(--color-gold, #e0a91c); color:#000; font-weight:700;">0% ПЕРВЫЙ ЗАЙМ</span>
       <span style="background:rgba(46, 125, 79, 0.2); color:#4caf50; padding:0.25rem 0.75rem; border-radius:4px; font-weight:600; font-size:0.8rem;">ЛИЦЕНЗИЯ ЦБ РФ</span>
     </div>
 
     <h1 class="mega-title" style="font-size: clamp(2rem, 5vw, 3.2rem); margin-top: 0.25rem; line-height:1.2;">
-      {title}
+      Займы без отказа онлайн на карту 24/7
     </h1>
     <p style="color:var(--color-text-muted, #a0a0a0); font-size:1.05rem; margin-top:0.5rem; max-width:800px; line-height:1.6;">
-      {intro}
+      Сравните предложения от МФО с мгновенной выдачей микрозаймов без отказа. Перевод средств на любую банковскую карту РФ по СБП за 2 минуты.
     </p>
 
     <!-- Телеметрическая панель -->
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:1rem; margin-top:2rem; margin-bottom:2rem;">
       <div style="background:var(--color-bg-card, #12100d); border:1px solid var(--color-border, rgba(255,255,255,0.1)); padding:1.25rem; border-radius:12px; text-align:center;">
-        <div style="font-family:'Unbounded', sans-serif; font-size:1.75rem; color:var(--color-gold, #e0a91c); font-weight:700;">{rate}</div>
+        <div style="font-family:'Unbounded', sans-serif; font-size:1.75rem; color:var(--color-gold, #e0a91c); font-weight:700;">от 0%</div>
         <div style="font-size:0.8rem; color:var(--color-text-muted, #888); margin-top:0.25rem;">Ставка</div>
       </div>
       <div style="background:var(--color-bg-card, #12100d); border:1px solid var(--color-border, rgba(255,255,255,0.1)); padding:1.25rem; border-radius:12px; text-align:center;">
-        <div style="font-family:'Unbounded', sans-serif; font-size:1.75rem; color:var(--color-gold, #e0a91c); font-weight:700;">{speed}</div>
+        <div style="font-family:'Unbounded', sans-serif; font-size:1.75rem; color:var(--color-gold, #e0a91c); font-weight:700;">2 минуты</div>
         <div style="font-size:0.8rem; color:var(--color-text-muted, #888); margin-top:0.25rem;">Скорость</div>
       </div>
       <div style="background:var(--color-bg-card, #12100d); border:1px solid var(--color-border, rgba(255,255,255,0.1)); padding:1.25rem; border-radius:12px; text-align:center;">
-        <div style="font-family:'Unbounded', sans-serif; font-size:1.75rem; color:var(--color-gold, #e0a91c); font-weight:700;">{limit}</div>
+        <div style="font-family:'Unbounded', sans-serif; font-size:1.75rem; color:var(--color-gold, #e0a91c); font-weight:700;">до 100 000 ₽</div>
         <div style="font-size:0.8rem; color:var(--color-text-muted, #888); margin-top:0.25rem;">Лимит</div>
       </div>
       <div style="background:var(--color-bg-card, #12100d); border:1px solid var(--color-border, rgba(255,255,255,0.1)); padding:1.25rem; border-radius:12px; text-align:center;">
@@ -147,7 +80,7 @@ def generate_html_page(topic):
 
     <!-- Кнопка перехода к подбору -->
     <div style="margin-top:2rem; text-align:center;">
-      <a href="{cat}.html" class="btn-primary" style="padding:1rem 2rem; font-size:1.1rem; min-height:44px; display:inline-flex; align-items:center;" data-analytics-event="gen_page_cta_{slug}">
+      <a href="mfo.html" class="btn-primary" style="padding:1rem 2rem; font-size:1.1rem; min-height:44px; display:inline-flex; align-items:center;" data-analytics-event="gen_page_cta_zaym-bez-otkaza-online">
         Смотреть каталог предложений →
       </a>
     </div>
@@ -172,23 +105,4 @@ def generate_html_page(topic):
 
   <script src="app.js" defer></script>
 </body>
-</html>"""
-
-def main():
-    print("AI Financial Generator initialized...")
-    api_key = os.environ.get("GROK_API_KEY") or os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        print("Notice: GROK_API_KEY / OPENAI_API_KEY secret not present in environment. Generating template pages.")
-
-    site_dir = "/home/user/all-banki-site"
-    
-    print(f"Processing {len(FINANCIAL_TOPICS)} financial topics...")
-    for t in FINANCIAL_TOPICS:
-        html_content = generate_html_page(t)
-        file_path = os.path.join(site_dir, f"{t['slug']}.html")
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(html_content)
-        print(f"Generated page for: {t['title']} ({t['slug']}.html)")
-
-if __name__ == "__main__":
-    main()
+</html>
