@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Бот-писатель финансовых витрин (Programmatic AI Generator v2.1):
-Генерирует уникальные посадочные микространицы под НЧ-запросы.
-Каждая страница включает:
+Бот-писатель финансовых витрин (Programmatic AI Generator v2.2 - FROZEN TEMPLATE):
+Зафиксированный стандарт генерации посадочных страниц ЦЕХ Studio SOTA 2026.
+
+Зафиксированный канонический шаблон содержит:
 1. Матричную видео-заставку SK-17 с текстом в столбик, ТЕТ-А-ТЕТ СООТВЕТСТВУЮЩИМ КЛЮЧЕВОЙ ФРАЗЕ.
 2. ПОЛНЫЙ КАТАЛОГ ОФФЕРОВ (25+ МФО / 20+ Кредитов / 11+ Карт) прямо на странице с фильтрацией и калькулятором.
-3. Иконки строго 44x44 / 48x48px (без выпадений и искажений).
+3. Логотипы банков/МФО строго 48x48px (object-fit: contain, 100% Mobile Safe).
 4. Экспертный SEO-текст со структурированными заголовками H2/H3, списками и FAQ.
 5. Schema.org микроразметку и 100% чистый код без BANNED слопа.
 """
@@ -458,7 +459,7 @@ def generate_full_html_page(topic):
 </html>"""
 
 def main():
-    print("AI Financial Generator v2.1 initialized (Strict Logo 48x48 Overflow Safe)...")
+    print("AI Financial Generator v2.2 FROZEN TEMPLATE initialized...")
     site_dir = "/home/user/all-banki-site"
     
     print(f"Generating {len(FINANCIAL_TOPICS)} full programmatic pages...")
