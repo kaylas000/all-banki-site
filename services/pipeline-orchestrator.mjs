@@ -3,17 +3,20 @@ import { generateHumanSeoArticle } from "./02-text-generator/text-service.mjs";
 import { compileUniquePage } from "./03-page-compiler/page-compiler-service.mjs";
 import { publishAllGeneratedPages } from "./04-publisher/publisher-service.mjs";
 
-/* 🚀 SOTA 2026 PROGRAMMATIC MICROSERVICES ORCHESTRATOR */
+/* 🚀 SOTA 2026 PROGRAMMATIC MICROSERVICES ORCHESTRATOR — RECOMMENDED PROD CONFIG */
 
-async function runProgrammaticPipeline(phraseCount = 5) {
+async function runProgrammaticPipeline() {
+  const batchSize = parseInt(process.env.BATCH_SIZE || "10", 10);
+
   console.log("=================================================");
   console.log("🚀 STARTING CEH STUDIO PROGRAMMATIC GENERATION PIPELINE");
+  console.log(`Recommended Pacing: ${batchSize} pages/run (~100-160 pages/day)`);
   console.log("=================================================");
 
   // Step 1: Generate Low-Frequency Keywords
   console.log("\n[STEP 1/4] Generating Low-Frequency Long-Tail Keywords...");
-  const phrases = generateLowFrequencyPhrases(phraseCount);
-  console.log(`Generated ${phrases.length} keywords.`);
+  const phrases = generateLowFrequencyPhrases(batchSize);
+  console.log(`Generated ${phrases.length} target keywords.`);
 
   // Step 2 & 3: Generate Human SEO Text & Compile Unique Pages
   console.log("\n[STEP 2 & 3/4] Generating Human SEO Copy & Compiling CEH Unique Pages...");
@@ -27,7 +30,7 @@ async function runProgrammaticPipeline(phraseCount = 5) {
   }
 
   // Step 4: Validate Linters & Publish
-  console.log("\n[STEP 4/4] Validating Linters & Publishing to GitHub Pages...");
+  console.log("\n[STEP 4/4] Validating Linters & Publishing to GitHub Pages + IndexNow...");
   const publishResult = publishAllGeneratedPages();
 
   console.log("\n=================================================");
@@ -36,7 +39,7 @@ async function runProgrammaticPipeline(phraseCount = 5) {
   console.log("=================================================");
 }
 
-runProgrammaticPipeline(5).catch(err => {
+runProgrammaticPipeline().catch(err => {
   console.error("Pipeline failed:", err);
   process.exit(1);
 });
