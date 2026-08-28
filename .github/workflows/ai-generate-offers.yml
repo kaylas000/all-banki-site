@@ -1,0 +1,38 @@
+name: Generate AI Financial Pages & Offers
+
+on:
+  workflow_dispatch: # Manual trigger via GitHub Actions button
+
+jobs:
+  generate-financial-content:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml requests
+
+      - name: Run AI Generator script
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY || secrets.OPENAI_API_KEY }}
+        run: |
+          python .github/scripts/generate_financial_pages.py
+
+      - name: Commit and Push generated pages
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git status
+          git commit -m "🤖 Auto-publish AI Financial Pages & Sitemap Update" || true
+          git push
