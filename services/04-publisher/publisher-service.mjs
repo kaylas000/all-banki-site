@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
+import { pingIndexNowEndpoints } from "./indexnow-service.mjs";
 
-/* Microservice 4: Publisher & IndexNow Pipeline */
+/* Microservice 4: Publisher & Instant IndexNow Pipeline */
 
 const siteDir = "/home/user/all-banki-site";
 
@@ -24,7 +25,10 @@ ${files.map(f => `  <url>
   fs.writeFileSync(path.join(siteDir, "sitemap.xml"), sitemap, "utf8");
   console.log(`Updated sitemap.xml with ${files.length} URLs.`);
 
-  // 2. Run Linters
+  // 2. Instant IndexNow Ping
+  pingIndexNowEndpoints(files);
+
+  // 3. Run Linters
   try {
     const linterOutput = execSync("node /home/user/ceh-veb/run-all-linters.mjs", { encoding: "utf8" });
     console.log(linterOutput);
@@ -33,13 +37,13 @@ ${files.map(f => `  <url>
     throw new Error("Linter check failed. Publishing aborted.");
   }
 
-  // 3. Git Commit and Push
+  // 4. Git Commit and Push
   execSync("git config user.email 'agent@ceh-studio.local'", { cwd: siteDir });
   execSync("git config user.name 'CEH Studio Agent'", { cwd: siteDir });
   execSync("git add .", { cwd: siteDir });
   
   try {
-    execSync("git commit -m '🤖 Microservices Pipeline: Auto-compiled & Published Programmatic Pages'", { cwd: siteDir });
+    execSync("git commit -m '🤖 Microservices Pipeline: Auto-compiled & Published Programmatic Pages with IndexNow'", { cwd: siteDir });
   } catch {
     console.log("No new git changes to commit.");
   }

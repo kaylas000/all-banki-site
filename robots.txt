@@ -1,13 +1,36 @@
+# 🤖 ROBOTS.TXT FOR ALL-BANKI-SITE — SOTA 2026 SEARCH & AI BOT PROTOCOL
 User-agent: *
 Allow: /
+Crawl-delay: 0.1
 
+# AI Crawlers & LLM Bots Allowed for Instant Search Interception
 User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
 Allow: /
 
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Sitemap & LLM Specs
 Sitemap: https://kaylas000.github.io/all-banki-site/sitemap.xml
+Sitemap: https://kaylas000.github.io/all-banki-site/llms.txt
