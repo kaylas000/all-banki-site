@@ -16,6 +16,8 @@ class BankMatrixVideoEngine {
     // Dynamic text reveal per page
     if (canvas && canvas.dataset && canvas.dataset.text) {
       this.columnText = canvas.dataset.text.split("|");
+    } else if (typeof window !== "undefined" && window.location.pathname.includes("kart")) {
+      this.columnText = ["БАНКОВСКИЕ", "КАРТЫ", "ОНЛАЙН", "КЭШБЭК"];
     } else if (typeof window !== "undefined" && window.location.pathname.includes("kredity")) {
       this.columnText = ["КРЕДИТЫ", "НАЛИЧНЫМИ", "ОНЛАЙН", "В БАНКАХ"];
     } else if (typeof window !== "undefined" && (window.location.pathname.includes("mfo") || window.location.pathname.includes("zaym"))) {
