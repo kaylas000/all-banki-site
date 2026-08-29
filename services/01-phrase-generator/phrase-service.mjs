@@ -1,95 +1,59 @@
 import fs from "node:fs";
 
-/* Microservice 1: Low-Frequency Long-Tail Phrase Generator */
+/* Microservice 1: Dynamic Low-Frequency Long-Tail Phrase Generator (Endless Unique Keywords) */
 
-export function generateLowFrequencyPhrases(count = 10) {
-  const seedKeywords = [
-    {
-      keyword: "займ 5000 рублей на карту без проверок и звонков",
-      category: "mfo",
-      slug: "zaym-5000-na-kartu-bez-zvonkov",
-      matrixLines: ["ЗАЙМ 5000 ₽", "НА КАРТУ МИР", "БЕЗ ЗВОНКОВ", "ОДОБРЕНИЕ 98%"],
-      targetSum: "5 000 ₽",
-      targetRate: "0%"
-    },
-    {
-      keyword: "срочный микрозайм круглосуточно по паспорту с 18 лет",
-      category: "mfo",
-      slug: "srochnyj-zaym-kruglesutochno-18-let",
-      matrixLines: ["СРОЧНЫЙ ЗАЙМ", "КРУГЛОСУТОЧНО", "ПО ПАСПОРТУ", "С 18 ЛЕТ"],
-      targetSum: "15 000 ₽",
-      targetRate: "0%"
-    },
-    {
-      keyword: "микрозайм на карту по сбп мгновенно без отказа ночью",
-      category: "mfo",
-      slug: "mikrozaym-na-kartu-sbp-mgnovenno-nochyu",
-      matrixLines: ["ЗАЙМ ПО СБП", "МГНОВЕННО", "БЕЗ ОТКАЗА", "НОЧЬЮ 24/7"],
-      targetSum: "30 000 ₽",
-      targetRate: "0%"
-    },
-    {
-      keyword: "займ без работы и с плохой кредитной историей мгновенно",
-      category: "mfo",
-      slug: "zaym-bez-raboty-s-plohoj-ki-mgnovenno",
-      matrixLines: ["ЗАЙМ БЕЗ РАБОТЫ", "С ПЛОХОЙ КИ", "МГНОВЕННО", "БЕЗ СПРАВОК"],
-      targetSum: "10 000 ₽",
-      targetRate: "0%"
-    },
-    {
-      keyword: "потребительский кредит 500 тысяч без справки 2 ндфл",
-      category: "kredity",
-      slug: "kredit-500-tysyach-bez-2-ndfl",
-      matrixLines: ["КРЕДИТ 500 ТЫС", "БЕЗ 2-НДФЛ", "ПО ПАСПОРТУ", "СТАВКА 4.9%"],
-      targetSum: "500 000 ₽",
-      targetRate: "от 4.9%"
-    },
-    {
-      keyword: "кредит наличными по паспорту с мгновенным онлайн решением",
-      category: "kredity",
-      slug: "kredit-nalichnymi-po-pasportu-mgnovenno",
-      matrixLines: ["КРЕДИТ НАЛИЧНЫМИ", "ПО ПАСПОРТУ", "РЕШЕНИЕ 2 МИН", "ДО 5 МЛН ₽"],
-      targetSum: "1 000 000 ₽",
-      targetRate: "от 4.9%"
-    },
-    {
-      keyword: "дебетовая карта с высоким процентом на остаток и бесплатным обслуживанием",
-      category: "karty",
-      slug: "debetovaya-karta-procent-na-ostatok-besplatno",
-      matrixLines: ["БАНКОВСКИЕ КАРТЫ", "% НА ОСТАТОК", "КЭШБЭК ДО 15%", "0 ₽/МЕСЯЦ"],
-      targetSum: "0 ₽",
-      targetRate: "до 15%"
-    },
-    {
-      keyword: "кредитная карта с льготным периодом 365 дней без процентов",
-      category: "karty",
-      slug: "kreditnaya-karta-365-dnej-bez-procentov",
-      matrixLines: ["КРЕДИТНАЯ КАРТА", "365 ДНЕЙ БЕЗ %", "ЛИМИТ 500 ТЫС", "ДОСТАВКА 0 ₽"],
-      targetSum: "500 000 ₽",
-      targetRate: "0% 365 дней"
-    },
-    {
-      keyword: "вклад с высоким процентом и ежемесячной капитализацией на 6 месяцев",
-      category: "vklady",
-      slug: "vklad-высокий-procent-kapitalizaciya-6-mesyacev",
-      matrixLines: ["ВКЛАД 18.01%", "С КАПИТАЛИЗАЦИЕЙ", "НА 6 МЕСЯЦЕВ", "АСВ СТРАХОВКА"],
-      targetSum: "50 000 ₽",
-      targetRate: "18.01%"
-    },
-    {
-      keyword: "накопительный счет с ежедневным начислением процентов без ограничений",
-      category: "vklady",
-      slug: "nakopitelnyj-schet-ezhednevno-bez-ogranichenij",
-      matrixLines: ["НАКОПИТЕЛЬНЫЙ", "ЕЖЕДНЕВНЫЙ %", "БЕЗ СНЯТИЯ %", "СТАВКА 17%"],
-      targetSum: "100 000 ₽",
-      targetRate: "до 17%"
+export function generateLowFrequencyPhrases(count = 30) {
+  const baseSums = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000];
+  const cities = ["moskva", "sankt-peterburg", "novosibirsk", "ekaterinburg", "kazan", "nizhnij-novgorod", "samara", "chelyabinsk", "omsk", "rostop-na-donu", "ufa", "krasnoyarsk"];
+  const mfoModifiers = ["bez-zvonkov", "bez-otkaza", "mgnovenno-24-7", "po-sbp", "bez-raboty", "bez-strahovok", "pensioneram", "studentam", "bez-proverok"];
+  const creditModifiers = ["bez-2-ndfl", "po-pasportu", "na-remont", "pod-zalog-avto", "pod-zalog-nedvizhimosti", "refinansirovanie", "ehkspress"];
+
+  const generated = [];
+  const timestamp = Date.now().toString().slice(-4);
+
+  // 1. Generate MFO Loans
+  for (let i = 0; i < count; i++) {
+    const sum = baseSums[i % baseSums.length];
+    const city = cities[i % cities.length];
+    const mod = mfoModifiers[i % mfoModifiers.length];
+    const cat = i % 2 === 0 ? "mfo" : i % 3 === 0 ? "kredity" : "karty";
+
+    if (cat === "mfo") {
+      generated.push({
+        keyword: `займ ${sum} рублей на карту ${mod.replace(/-/g, " ")} в г. ${city.replace(/-/g, " ")}`,
+        category: "mfo",
+        slug: `zaym-${sum}-rublej-${mod}-${city}`,
+        matrixLines: [`ЗАЙМ ${sum} ₽`, "НА КАРТУ МИР", mod.toUpperCase().replace(/-/g, " "), "ОДОБРЕНИЕ 98%"],
+        targetSum: `${sum.toLocaleString("ru-RU")} ₽`,
+        targetRate: "0%"
+      });
+    } else if (cat === "kredity") {
+      generated.push({
+        keyword: `потребительский кредит ${sum} рублей ${mod.replace(/-/g, " ")} в г. ${city.replace(/-/g, " ")}`,
+        category: "kredity",
+        slug: `kredit-${sum}-rublej-${mod}-${city}`,
+        matrixLines: [`КРЕДИТ ${sum} ₽`, "ПО ПАСПОРТУ", mod.toUpperCase().replace(/-/g, " "), "СТАВКА 4.9%"],
+        targetSum: `${sum.toLocaleString("ru-RU")} ₽`,
+        targetRate: "от 4.9%"
+      });
+    } else {
+      generated.push({
+        keyword: `дебетовая карта с кэшбэком и бесплатным обслуживанием ${sum} рублей лимит`,
+        category: "karty",
+        slug: `karta-s-kashbekom-limit-${sum}-${city}`,
+        matrixLines: ["БАНКОВСКАЯ КАРТА", "КЭШБЭК ДО 15%", "0 ₽ ОБСЛУЖИВАНИЕ", "ДОСТАВКА 1 ДЕНЬ"],
+        targetSum: `${sum.toLocaleString("ru-RU")} ₽`,
+        targetRate: "до 15%"
+      });
     }
-  ];
+  }
 
-  return seedKeywords.slice(0, count);
+  return generated.slice(0, count);
 }
 
 if (process.argv[1].endsWith("phrase-service.mjs")) {
-  const phrases = generateLowFrequencyPhrases(10);
-  console.log("Microservice 1 [Phrase Generator] output count:", phrases.length);
+  const testPhrases = generateLowFrequencyPhrases(30);
+  console.log("Generated phrases count:", testPhrases.length);
+  console.log("Sample 0:", testPhrases[0].slug);
+  console.log("Sample 10:", testPhrases[10].slug);
 }
